@@ -3,8 +3,9 @@ package gestionInventario.com.repository;
 import gestionInventario.com.http.PurchasedProduct;
 import gestionInventario.com.model.entity.Cart;
 import gestionInventario.com.model.entity.utils.CustomerProductId;
-import gestionInventario.com.model.enu.cart.CartStatus;
+import gestionInventario.com.model.enumerator.cart.CartStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -29,4 +30,8 @@ public interface ICartRepository extends JpaRepository<Cart, CustomerProductId> 
             "AND c.cartStatus = :cartStatus")
     Double findTotalSpentOfCartBuy(@Param("idCustomer") Long idCustomer,
                                    @Param("cartStatus")CartStatus cartStatus);
+
+    @Modifying
+    @Query("UPDATE Cart c SET c.cartStatus = 'CANCELED' WHERE c.cartStatus = 'IN_PROGRESS' AND c.product.id = :idProduct AND c.customer.id = :idCustomer")
+    void deleteCart(Long idCustomer, Long idProduct);
 }

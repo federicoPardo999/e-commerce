@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     OrderServiceImpl orderService;
 
+    //esto deberia ser un request dto
     @PostMapping("/create/{idCustomer}")
     public ResponseEntity<?> create(@PathVariable Long idCustomer){
         orderService.createOrder(idCustomer);

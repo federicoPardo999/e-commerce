@@ -4,7 +4,7 @@ import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.model.entity.Cart;
 import gestionInventario.com.model.entity.Customer;
 import gestionInventario.com.model.entity.OrderEntity;
-import gestionInventario.com.model.enu.cart.CartStatus;
+import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.repository.ICartRepository;
 import gestionInventario.com.repository.ICustomerRepository;
 import gestionInventario.com.repository.IOrderRepository;
@@ -34,7 +34,7 @@ public class OrderServiceImpl implements IOrderService {
         Double orderPrice = 0.0;
         Integer quantity = 0;
 
-        for(Cart cart:carts){
+        for (Cart cart : carts) {
             orderPrice += cart.getPriceTotal();
             cart.setCartStatus(CartStatus.FINISHED);
             quantity += cart.getQuantity();

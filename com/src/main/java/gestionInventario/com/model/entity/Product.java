@@ -1,6 +1,6 @@
 package gestionInventario.com.model.entity;
 
-import gestionInventario.com.model.enu.product.Category;
+import gestionInventario.com.model.enumerator.product.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

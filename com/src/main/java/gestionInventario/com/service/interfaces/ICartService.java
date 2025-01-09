@@ -12,5 +12,6 @@ public interface ICartService {
      List<CartResponseDTO> getCartsFinished(Long idCustomer);
      BuyCartResponse getBuyCart(Long idCustomer);
      BuyCartResponse getPurchasedHistory(Long idCustomer);
+     void deleteCart(Long idCustomer, Long idProduct);
 
 }

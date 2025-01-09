@@ -18,6 +18,7 @@ import java.util.List;
 public class ProductServiceImpl implements IProductService {
     IProductRepository productRepository;
     ProductMapper productMapper;
+
     @Override
     public void createProduct(Product product) {
         productRepository.save(product);
@@ -26,5 +27,15 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductResponseDTO> getMostExpensiveProduct() {
         return productMapper.ProductsToProductsDTO(productRepository.getMostExpensivesProducts());
+    }
+
+    @Override
+    public List<ProductResponseDTO> getAllProducts() {
+        return productMapper.ProductsToProductsDTO(productRepository.findAll());
+    }
+
+    @Override
+    public List<ProductResponseDTO> getProductsByCategory(String category) {
+        return productMapper.ProductsToProductsDTO(productRepository.findProductsByCategory(category));
     }
 }

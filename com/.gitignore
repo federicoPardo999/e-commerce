@@ -1,0 +1,71 @@
+# Archivos de sistema operativos comunes
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación
+/target/
+/build/
+
+# Configuración de IDEs
+/.idea/
+/*.iml
+.classpath
+.project
+.settings/
+/.vscode/
+/*.log
+
+# Configuración del sistema operativo
+/*.swp
+*.swo
+
+# Configuración de Maven y Gradle
+/.mvn/
+/mvnw
+/mvnw.cmd
+.gradle/
+/build/
+
+# Dependencias descargadas
+/.m2/
+/.gradle/
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*.swo
+*.old
+*.orig
+
+# Logs
+*.log
+*.out
+*.err
+/logs/
+
+# Archivos específicos de Spring Boot
+spring-boot-devtools.properties
+.env
+*.key
+*.jks
+
+# Credenciales y configuraciones sensibles
+/application.properties
+/application.yml
+/application-*.properties
+/application-*.yml
+
+# Archivos generados por el sistema
+hs_err_pid*
+replay_pid*
+
+# Archivos de configuración de contenedores
+docker-compose.override.yml
+
+# Archivos de test y reportes
+/test-output/
+/coverage/
+/jacoco/
+*.ec
+*.em

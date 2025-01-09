@@ -18,33 +18,39 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class cartController {
-
     ICartService cartService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CartItemRequestDTO  cartItemRequestDTO){
+    public ResponseEntity<?> create(@RequestBody CartItemRequestDTO cartItemRequestDTO) {
         cartService.createCartItem(cartItemRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/getCarts/{idCustomer}")
-    public ResponseEntity<List<CartResponseDTO>> getCarts(@PathVariable Long idCustomer){
-        return new ResponseEntity<>(cartService.getAllCarts(idCustomer),HttpStatus.OK);
+    public ResponseEntity<List<CartResponseDTO>> getCarts(@PathVariable Long idCustomer) {
+        return new ResponseEntity<>(cartService.getAllCarts(idCustomer), HttpStatus.OK);
     }
 
-    @GetMapping("/getCartsFinished/{idCustomer}")
-    public ResponseEntity<List<CartResponseDTO>> getCartsFinished(@PathVariable Long idCustomer){
-        return new ResponseEntity<>(cartService.getCartsFinished(idCustomer),HttpStatus.OK);
+    //Este endpoint deberia ir en orderController
+    @GetMapping("/carts-finished/{idCustomer}")
+    public ResponseEntity<List<CartResponseDTO>> getCartsFinished(@PathVariable Long idCustomer) {
+        return new ResponseEntity<>(cartService.getCartsFinished(idCustomer), HttpStatus.OK);
     }
 
     @GetMapping("/getBuyCart/{idCustomer}")
-    public ResponseEntity<BuyCartResponse> getBuyCartResponse(@PathVariable Long idCustomer){
-        return new ResponseEntity<>(cartService.getBuyCart(idCustomer),HttpStatus.OK);
+    public ResponseEntity<BuyCartResponse> getBuyCartResponse(@PathVariable Long idCustomer) {
+        return new ResponseEntity<>(cartService.getBuyCart(idCustomer), HttpStatus.OK);
     }
 
     @GetMapping("/getPurchasedHistory/{idCustomer}")
-    public ResponseEntity<BuyCartResponse> getPurchasedHistory(@PathVariable Long idCustomer){
-        return new ResponseEntity<>(cartService.getPurchasedHistory(idCustomer),HttpStatus.OK);
+    public ResponseEntity<BuyCartResponse> getPurchasedHistory(@PathVariable Long idCustomer) {
+        return new ResponseEntity<>(cartService.getPurchasedHistory(idCustomer), HttpStatus.OK);
+    }
+
+    @PatchMapping("/deleteCart/{idCustomer}/{idProduct}")
+    public ResponseEntity<?> deleteCart(@PathVariable Long idCustomer, @PathVariable Long idProduct) {
+        cartService.deleteCart(idCustomer, idProduct);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

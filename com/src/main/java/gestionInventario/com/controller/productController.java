@@ -1,5 +1,6 @@
 package gestionInventario.com.controller;
 
+import gestionInventario.com.exception.BadRequestException;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.service.interfaces.IProductService;
@@ -21,13 +22,26 @@ public class productController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody Product product) {
+        try{
         productService.createProduct(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
+        }catch (Exception e){
+            throw new BadRequestException(e.getMessage()+"url mal escrita");
+        }
     }
 
-    @GetMapping("/get-most-expensives-product")
+    @GetMapping("/get-most-expensive")
     public ResponseEntity<List<ProductResponseDTO>> getMostExpensivesProduct() {
-        return new ResponseEntity<>(productService.getMostExpensiveProduct(),HttpStatus.OK);
+        return  ResponseEntity.ok(productService.getMostExpensiveProduct());
+    }
 
+    @GetMapping("get-all")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts(){
+        return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @GetMapping("get-by-category/{category}")
+    public ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable String category){
+        return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
 }

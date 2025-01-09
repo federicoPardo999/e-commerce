@@ -5,15 +5,13 @@ import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.http.BuyCartResponse;
 import gestionInventario.com.http.PurchasedProduct;
 import gestionInventario.com.mapper.cart.CartMapper;
-import gestionInventario.com.mapper.product.ProductMapper;
 import gestionInventario.com.model.dto.cart.CartItemRequestDTO;
 import gestionInventario.com.model.dto.cart.CartResponseDTO;
-import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import gestionInventario.com.model.entity.Customer;
 import gestionInventario.com.model.entity.Cart;
 import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.entity.utils.CustomerProductId;
-import gestionInventario.com.model.enu.cart.CartStatus;
+import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.repository.ICartRepository;
 import gestionInventario.com.repository.ICustomerRepository;
 import gestionInventario.com.repository.IProductRepository;
@@ -32,7 +30,6 @@ public class CartServiceImpl implements ICartService {
     IProductRepository productRepository;
     ICustomerRepository customerRepository;
     ICartRepository cartRepository;
-    ProductMapper productMapper;
     CartMapper cartMapper;
 
     @Override
@@ -86,11 +83,7 @@ public class CartServiceImpl implements ICartService {
         Customer customer = findCustomer(idCustomer);
         Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.IN_PROGRESS);
 
-        return BuyCartResponse.builder()
-                .nameCustomer(customer.getUsername())
-                .products(products)
-                .totalSpent(totalSpent)
-                .build();
+        return buildCartResponse(customer.getUsername(),products,totalSpent);
     }
 
     @Override
@@ -100,8 +93,18 @@ public class CartServiceImpl implements ICartService {
         Customer customer = findCustomer(idCustomer);
         Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.FINISHED);
 
+        return buildCartResponse(customer.getUsername(),products,totalSpent);
+    }
+
+    @Override
+    public void deleteCart(Long idCustomer, Long idProduct) {
+        cartRepository.deleteCart(idCustomer,idProduct);
+    }
+
+    private BuyCartResponse buildCartResponse(String username, List<PurchasedProduct> products,
+                                              Double totalSpent ){
         return BuyCartResponse.builder()
-                .nameCustomer(customer.getUsername())
+                .nameCustomer(username)
                 .products(products)
                 .totalSpent(totalSpent)
                 .build();

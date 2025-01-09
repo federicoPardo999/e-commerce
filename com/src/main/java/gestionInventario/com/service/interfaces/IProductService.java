@@ -9,5 +9,8 @@ import java.util.List;
 public interface IProductService {
      void createProduct(Product product);
      List<ProductResponseDTO> getMostExpensiveProduct();
+
+     List<ProductResponseDTO> getAllProducts();
+     List<ProductResponseDTO> getProductsByCategory(String category);
 }
 

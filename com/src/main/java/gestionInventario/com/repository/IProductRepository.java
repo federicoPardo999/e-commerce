@@ -11,4 +11,7 @@ import java.util.List;
 public interface IProductRepository extends JpaRepository<Product,Long> {
     @Query("SELECT p FROM Product p ORDER BY p.price DESC limit 1")
     public List<Product>  getMostExpensivesProducts();
+
+    @Query("SELECT p FROM Products p where category = :category")
+    List<Product> findProductsByCategory(String category);
 }

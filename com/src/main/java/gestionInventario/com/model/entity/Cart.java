@@ -1,7 +1,7 @@
 package gestionInventario.com.model.entity;
 
 import gestionInventario.com.model.entity.utils.CustomerProductId;
-import gestionInventario.com.model.enu.cart.CartStatus;
+import gestionInventario.com.model.enumerator.cart.CartStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
