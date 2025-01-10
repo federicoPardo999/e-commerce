@@ -1,8 +1,8 @@
 package gestionInventario.com.controller;
 
-import gestionInventario.com.http.BuyCartResponse;
+
 import gestionInventario.com.model.dto.cart.CartItemRequestDTO;
-import gestionInventario.com.model.dto.cart.CartResponseDTO;
+
 import gestionInventario.com.service.interfaces.ICartService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
@@ -26,31 +25,30 @@ public class cartController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/getCarts/{idCustomer}")
-    public ResponseEntity<List<CartResponseDTO>> getCarts(@PathVariable Long idCustomer) {
-        return new ResponseEntity<>(cartService.getAllCarts(idCustomer), HttpStatus.OK);
+    @GetMapping("/carts/{idCustomer}")
+    public ResponseEntity<?> getCarts(@PathVariable Long idCustomer) {
+        return ResponseEntity.ok(cartService.getAllCarts(idCustomer));
     }
 
     //Este endpoint deberia ir en orderController
     @GetMapping("/carts-finished/{idCustomer}")
-    public ResponseEntity<List<CartResponseDTO>> getCartsFinished(@PathVariable Long idCustomer) {
-        return new ResponseEntity<>(cartService.getCartsFinished(idCustomer), HttpStatus.OK);
+    public ResponseEntity<?> getCartsFinished(@PathVariable Long idCustomer) {
+        return ResponseEntity.ok(cartService.getCartsFinished(idCustomer));
     }
 
-    @GetMapping("/getBuyCart/{idCustomer}")
-    public ResponseEntity<BuyCartResponse> getBuyCartResponse(@PathVariable Long idCustomer) {
-        return new ResponseEntity<>(cartService.getBuyCart(idCustomer), HttpStatus.OK);
+    @GetMapping("/buy-cart/{idCustomer}")
+    public ResponseEntity<?> getBuyCartResponse(@PathVariable Long idCustomer) {
+        return ResponseEntity.ok(cartService.getBuyCart(idCustomer));
     }
 
-    @GetMapping("/getPurchasedHistory/{idCustomer}")
-    public ResponseEntity<BuyCartResponse> getPurchasedHistory(@PathVariable Long idCustomer) {
-        return new ResponseEntity<>(cartService.getPurchasedHistory(idCustomer), HttpStatus.OK);
+    @GetMapping("/purchased-history/{idCustomer}")
+    public ResponseEntity<?> getPurchasedHistory(@PathVariable Long idCustomer) {
+        return ResponseEntity.ok(cartService.getPurchasedHistory(idCustomer));
     }
 
-    @PatchMapping("/deleteCart/{idCustomer}/{idProduct}")
+    @PatchMapping("/delete-cart/{idCustomer}/{idProduct}")
     public ResponseEntity<?> deleteCart(@PathVariable Long idCustomer, @PathVariable Long idProduct) {
         cartService.deleteCart(idCustomer, idProduct);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

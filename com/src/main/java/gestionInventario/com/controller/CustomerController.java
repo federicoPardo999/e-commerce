@@ -25,7 +25,7 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/all-customers")
     public ResponseEntity<List<CustomerResponseDTO>> getAll() {
         return ResponseEntity.ok(customerService.getAll());
     }
