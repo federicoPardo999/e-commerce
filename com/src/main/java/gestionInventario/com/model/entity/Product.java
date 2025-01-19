@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,12 +18,15 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Long id;
 
-     String name;
-     Double price;
-     Integer stock;
+    String name;
+    Double price;
+    Integer stock;
+    String description;
 
-     @Enumerated(EnumType.STRING)
-     Category category;
+    String urlImage;
+
+    @Enumerated(EnumType.STRING)
+    Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
      List<Cart> carts;

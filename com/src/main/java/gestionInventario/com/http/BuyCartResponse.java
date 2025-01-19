@@ -1,6 +1,5 @@
 package gestionInventario.com.http;
 
-import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
