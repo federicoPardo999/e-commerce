@@ -1,6 +1,5 @@
 package gestionInventario.com.notification;
 
-import gestionInventario.com.exception.MailSendException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
