@@ -41,11 +41,6 @@ public class cartController {
         return ResponseEntity.ok(cartService.getBuyCart(idCustomer));
     }
 
-    @GetMapping("/purchased-history/{idCustomer}")
-    public ResponseEntity<?> getPurchasedHistory(@PathVariable Long idCustomer) {
-        return ResponseEntity.ok(cartService.getPurchasedHistory(idCustomer));
-    }
-
     @PatchMapping("/delete-cart/{idCustomer}/{idProduct}")
     public ResponseEntity<?> deleteCart(@PathVariable Long idCustomer, @PathVariable Long idProduct) {
         cartService.deleteCart(idCustomer, idProduct);

@@ -78,36 +78,21 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public BuyCartResponse getBuyCart(Long idCustomer) {
-        List<PurchasedProduct> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.IN_PROGRESS);
+        List<PurchasedProduct> products = cartRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
 
         Customer customer = findCustomer(idCustomer);
-        Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.IN_PROGRESS);
+        Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer, CartStatus.IN_PROGRESS);
 
-        return buildCartResponse(customer.getUsername(),products,totalSpent);
-    }
-
-    @Override
-    public BuyCartResponse getPurchasedHistory(Long idCustomer) {
-        List<PurchasedProduct> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.FINISHED);
-
-        Customer customer = findCustomer(idCustomer);
-        Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.FINISHED);
-
-        return buildCartResponse(customer.getUsername(),products,totalSpent);
+        return BuyCartResponse.builder()
+                .nameCustomer(customer.getUsername())
+                .products(products)
+                .totalSpent(totalSpent)
+                .build();
     }
 
     @Override
     public void deleteCart(Long idCustomer, Long idProduct) {
         cartRepository.deleteCart(idCustomer,idProduct);
-    }
-
-    private BuyCartResponse buildCartResponse(String username, List<PurchasedProduct> products,
-                                              Double totalSpent ){
-        return BuyCartResponse.builder()
-                .nameCustomer(username)
-                .products(products)
-                .totalSpent(totalSpent)
-                .build();
     }
 
     private Customer findCustomer(Long idCustomer) {

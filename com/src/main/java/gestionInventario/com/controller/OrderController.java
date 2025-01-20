@@ -21,5 +21,10 @@ public class OrderController {
         orderService.createOrder(idCustomer);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @GetMapping("/purchased-history/{idCustomer}")
+    public ResponseEntity<?> getPurchasedHistory(@PathVariable Long idCustomer) {
+        return ResponseEntity.ok(orderService.getPurchasedHistory(idCustomer));
+    }
 }
 

@@ -16,11 +16,11 @@ import java.util.List;
 public interface ICartRepository extends JpaRepository<Cart, CustomerProductId> {
     @Query("SELECT c FROM Cart c WHERE c.id.idCustomer = :idCustomer AND c.cartStatus = 'IN_PROGRESS'")
     List<Cart> findCartsInProgress(@Param("idCustomer") Long idCustomer);
-
+    //esto va en la entidad order
     @Query("SELECT c FROM Cart c WHERE c.id.idCustomer = :idCustomer AND c.cartStatus = 'FINISHED'")
     List<Cart> getCartsFinished(@Param("idCustomer") Long idCustomer);
 
-    @Query("SELECT new gestionInventario.com.http.PurchasedProduct(p.name, p.price, c.quantity) " +
+    @Query("SELECT new gestionInventario.com.http.PurchasedProduct(p.name, p.price, c.quantity,p.price*c.quantity) " +
             "FROM Product p JOIN p.carts c " +
             "WHERE c.id.idCustomer = :idCustomer AND c.cartStatus = :cartStatus")
     List<PurchasedProduct> findProductsByCustomer(@Param("idCustomer") Long idCustomer,

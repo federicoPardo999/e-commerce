@@ -1,10 +1,13 @@
 package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.NotFoundException;
+import gestionInventario.com.http.BuyCartResponse;
+import gestionInventario.com.http.PurchasedProduct;
 import gestionInventario.com.model.entity.Cart;
 import gestionInventario.com.model.entity.Customer;
 import gestionInventario.com.model.entity.OrderEntity;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
+import gestionInventario.com.notification.NotificationService;
 import gestionInventario.com.repository.ICartRepository;
 import gestionInventario.com.repository.ICustomerRepository;
 import gestionInventario.com.repository.IOrderRepository;
@@ -25,6 +28,9 @@ public class OrderServiceImpl implements IOrderService {
     ICustomerRepository customerRepository;
     IOrderRepository orderRepository;
 
+    NotificationService notificationService;
+
+    //refactoriazar para que tenga menos lineas
     @Override
     public void createOrder(Long idCustomer){
         Customer customer = customerRepository.findById(idCustomer)
@@ -49,7 +55,25 @@ public class OrderServiceImpl implements IOrderService {
                 .date(LocalDate.now())
                 .build();
 
+        notificationService.sendEmail("federicopardo944@gmail.com,",
+                "Pedido realizado con exito","Gracias por comprar en nuestra pagina");
+
         orderRepository.save(order);
+    }
+
+    @Override
+    public BuyCartResponse getPurchasedHistory(Long idCustomer) {
+        List<PurchasedProduct> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.FINISHED);
+
+        Customer customer = customerRepository.findById(idCustomer).orElseThrow(()->
+                new NotFoundException("don't founded customer with id: "+idCustomer));
+        Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.FINISHED);
+
+        return BuyCartResponse.builder()
+                .nameCustomer(customer.getUsername())
+                .products(products)
+                .totalSpent(totalSpent)
+                .build();
     }
 
 }

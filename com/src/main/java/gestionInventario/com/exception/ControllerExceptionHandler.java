@@ -46,4 +46,17 @@ public class ControllerExceptionHandler {
         return  ResponseEntity.status(apiError.getStatus()).body(apiError);
 
     }
+
+    @ExceptionHandler(MailSendException.class)
+    protected ResponseEntity<ApiError> handlerMailException(MailSendException e){
+
+        ApiError apiError = ApiError.builder()
+                .error("mail_exception")
+                .message(e.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .build();
+
+        return  ResponseEntity.status(apiError.getStatus()).body(apiError);
+
+    }
 }
