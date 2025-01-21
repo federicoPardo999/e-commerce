@@ -17,9 +17,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Long id;
 
-     String name;
-     Double price;
-     Integer stock;
+    String name;
+    Double price;
+    String description;
+    Integer stock;
 
      @Enumerated(EnumType.STRING)
      Category category;
