@@ -1,9 +1,9 @@
 package gestionInventario.com.controller;
 
 
-import gestionInventario.com.model.dto.cart.CartItemRequestDTO;
+import gestionInventario.com.model.dto.purchasedProduct.CartItemRequestDTO;
 
-import gestionInventario.com.service.interfaces.ICartService;
+import gestionInventario.com.service.interfaces.IPurchasedProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class cartController {
-    ICartService cartService;
+public class PurchasedProductController {
+    IPurchasedProductService cartService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody CartItemRequestDTO cartItemRequestDTO) {

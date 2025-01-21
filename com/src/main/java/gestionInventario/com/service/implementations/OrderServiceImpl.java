@@ -1,14 +1,14 @@
 package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.NotFoundException;
-import gestionInventario.com.http.BuyCartResponse;
-import gestionInventario.com.http.PurchasedProduct;
-import gestionInventario.com.model.entity.Cart;
+import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
+import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
+import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.Customer;
 import gestionInventario.com.model.entity.OrderEntity;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.notification.NotificationService;
-import gestionInventario.com.repository.ICartRepository;
+import gestionInventario.com.repository.IPurchasedProductRepository;
 import gestionInventario.com.repository.ICustomerRepository;
 import gestionInventario.com.repository.IOrderRepository;
 import gestionInventario.com.service.interfaces.IOrderService;
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class OrderServiceImpl implements IOrderService {
-    ICartRepository cartRepository;
+    IPurchasedProductRepository cartRepository;
     ICustomerRepository customerRepository;
     IOrderRepository orderRepository;
 
@@ -35,15 +35,15 @@ public class OrderServiceImpl implements IOrderService {
     public void createOrder(Long idCustomer){
         Customer customer = customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new NotFoundException("Customer with id: "+idCustomer+ ", not found"));
-        List<Cart> carts = cartRepository.findCartsInProgress(idCustomer);
+        List<PurchasedProduct> purchasedProducts = cartRepository.findCartsInProgress(idCustomer);
 
         Double orderPrice = 0.0;
         Integer quantity = 0;
 
-        for (Cart cart : carts) {
-            orderPrice += cart.getPriceTotal();
-            cart.setCartStatus(CartStatus.FINISHED);
-            quantity += cart.getQuantity();
+        for (PurchasedProduct purchasedProduct : purchasedProducts) {
+            orderPrice += purchasedProduct.getPriceTotal();
+            purchasedProduct.setCartStatus(CartStatus.FINISHED);
+            quantity += purchasedProduct.getQuantity();
         }
 
         OrderEntity order = OrderEntity
@@ -55,21 +55,25 @@ public class OrderServiceImpl implements IOrderService {
                 .date(LocalDate.now())
                 .build();
 
-        notificationService.sendEmail("federicopardo944@gmail.com,",
-                "Pedido realizado con exito","Gracias por comprar en nuestra pagina");
+        System.out.println("username: "+System.getenv("MAIL_USERNAME"));
+        System.out.println("password: "+System.getenv("MAIL_PASSWORD"));
 
         orderRepository.save(order);
+
+        notificationService.sendEmail("pardofede04@gmail.com,",
+                "Pedido realizado con exito", "Gracias por comprar en nuestra pagina");
+
     }
 
     @Override
-    public BuyCartResponse getPurchasedHistory(Long idCustomer) {
-        List<PurchasedProduct> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.FINISHED);
+    public PurchasedProductResponseDTO getPurchasedHistory(Long idCustomer) {
+        List<PurchasedProductDTO> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.FINISHED);
 
         Customer customer = customerRepository.findById(idCustomer).orElseThrow(()->
                 new NotFoundException("don't founded customer with id: "+idCustomer));
         Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.FINISHED);
 
-        return BuyCartResponse.builder()
+        return PurchasedProductResponseDTO.builder()
                 .nameCustomer(customer.getUsername())
                 .products(products)
                 .totalSpent(totalSpent)

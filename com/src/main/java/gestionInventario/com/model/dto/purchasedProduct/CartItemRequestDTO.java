@@ -1,14 +1,14 @@
-package gestionInventario.com.model.dto.cart;
+package gestionInventario.com.model.dto.purchasedProduct;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class CartItemRequestDTO {
     Integer quantityBuyStock;
     Long productId;

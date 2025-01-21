@@ -29,7 +29,7 @@ public class Product {
     Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
-     List<Cart> carts;
+     List<PurchasedProduct> purchasedProducts;
 
     public void decreaseStock(Integer stockDecrease){this.stock-=stockDecrease;}
 

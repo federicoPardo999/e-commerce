@@ -2,20 +2,19 @@ package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.BadRequestException;
 import gestionInventario.com.exception.NotFoundException;
-import gestionInventario.com.http.BuyCartResponse;
-import gestionInventario.com.http.PurchasedProduct;
-import gestionInventario.com.mapper.cart.CartMapper;
-import gestionInventario.com.model.dto.cart.CartItemRequestDTO;
-import gestionInventario.com.model.dto.cart.CartResponseDTO;
+import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
+import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
+import gestionInventario.com.mapper.purchasedProduct.PurchasedProductMapper;
+import gestionInventario.com.model.dto.purchasedProduct.CartItemRequestDTO;
+import gestionInventario.com.model.dto.purchasedProduct.CartResponseDTO;
 import gestionInventario.com.model.entity.Customer;
-import gestionInventario.com.model.entity.Cart;
+import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.Product;
-import gestionInventario.com.model.entity.utils.CustomerProductId;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
-import gestionInventario.com.repository.ICartRepository;
+import gestionInventario.com.repository.IPurchasedProductRepository;
 import gestionInventario.com.repository.ICustomerRepository;
 import gestionInventario.com.repository.IProductRepository;
-import gestionInventario.com.service.interfaces.ICartService;
+import gestionInventario.com.service.interfaces.IPurchasedProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,11 +25,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class CartServiceImpl implements ICartService {
+public class PurchasedProductServiceImpl implements IPurchasedProductService {
     IProductRepository productRepository;
     ICustomerRepository customerRepository;
-    ICartRepository cartRepository;
-    CartMapper cartMapper;
+    IPurchasedProductRepository cartRepository;
+    PurchasedProductMapper purchasedProductMapper;
 
     @Override
     public void createCartItem(CartItemRequestDTO cartItemDTO) {
@@ -39,19 +38,20 @@ public class CartServiceImpl implements ICartService {
                 .orElseThrow( ()-> new NotFoundException("product not founded"));
 
         Customer customer = findCustomer(cartItemDTO.getCustomerId());
-
+        //aca podria poner un condicional y actualizar el carrito si es que ya existe
         Integer stock = product.getStock();
         Integer stockToBuy = cartItemDTO.getQuantityBuyStock();
         Double price = product.getPrice();
 
-        if(sufficientStock(stock,stockToBuy)){
+        if(stockToBuyIsValid(stock,stockToBuy)){
 
             product.decreaseStock(stockToBuy);
             Double itemCartPrice = price* stockToBuy;
 
-            Cart cart = Cart
+            PurchasedProduct purchasedProduct = PurchasedProduct
                     .builder()
-                    .id(new CustomerProductId(product.getId(), customer.getId()))
+                    .product(product)
+                    .customer(customer)
                     .priceTotal(itemCartPrice)
                     .quantity(stockToBuy)
                     .product(product)
@@ -59,7 +59,7 @@ public class CartServiceImpl implements ICartService {
                     .cartStatus(CartStatus.IN_PROGRESS)
                     .build();
 
-            cartRepository.save(cart);
+            cartRepository.save(purchasedProduct);
 
         }else
             throw new BadRequestException("invalid quantity for stock :(");
@@ -68,22 +68,22 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public List<CartResponseDTO> getAllCarts(Long idCustomer) {
-        return cartMapper.cartsToCartResponseDTO(cartRepository.findCartsInProgress(idCustomer));
+        return purchasedProductMapper.cartsToCartResponseDTO(cartRepository.findCartsInProgress(idCustomer));
     }
 
     @Override
     public List<CartResponseDTO> getCartsFinished(Long idCustomer) {
-        return cartMapper.cartsToCartResponseDTO(cartRepository.getCartsFinished(idCustomer));
+        return purchasedProductMapper.cartsToCartResponseDTO(cartRepository.getCartsFinished(idCustomer));
     }
 
     @Override
-    public BuyCartResponse getBuyCart(Long idCustomer) {
-        List<PurchasedProduct> products = cartRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
+    public PurchasedProductResponseDTO getBuyCart(Long idCustomer) {
+        List<PurchasedProductDTO> products = cartRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
 
         Customer customer = findCustomer(idCustomer);
         Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer, CartStatus.IN_PROGRESS);
 
-        return BuyCartResponse.builder()
+        return PurchasedProductResponseDTO.builder()
                 .nameCustomer(customer.getUsername())
                 .products(products)
                 .totalSpent(totalSpent)
@@ -100,8 +100,7 @@ public class CartServiceImpl implements ICartService {
                 .orElseThrow( ()-> new NotFoundException("customer not founded"));
     }
 
-    private boolean sufficientStock(Integer stockProduct,Integer stockBuy) {
+    private boolean stockToBuyIsValid(Integer stockProduct, Integer stockBuy) {
         return stockProduct-stockBuy >= 0;
     }
-
 }

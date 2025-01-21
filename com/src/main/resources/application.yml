@@ -14,7 +14,7 @@ spring:
     default-encoding: UTF-8
 
   datasource:
-    url: jdbc:h2:mem:testdb # En memoria, o puedes usar un archivo con jdbc:h2:file:/ruta/a/tu/base
+    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: admin
     password: admin
@@ -24,8 +24,4 @@ spring:
       enabled: true # Habilita la consola web de H2 (por defecto en http://localhost:8080/h2-console)
   jpa:
     hibernate:
-      ddl-auto: update # Cambia esto según tus necesidades: none, validate, update, create, create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+      ddl-auto: update 
