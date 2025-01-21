@@ -2,6 +2,7 @@ package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.BadRequestException;
 import gestionInventario.com.exception.NotFoundException;
+import gestionInventario.com.exception.StockException;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.mapper.purchasedProduct.PurchasedProductMapper;
@@ -39,6 +40,8 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
 
         Customer customer = findCustomer(cartItemDTO.getCustomerId());
         //aca podria poner un condicional y actualizar el carrito si es que ya existe
+
+        //actualizar l compra si se vuelve a comprar un mismo producto
         Integer stock = product.getStock();
         Integer stockToBuy = cartItemDTO.getQuantityBuyStock();
         Double price = product.getPrice();
@@ -62,7 +65,7 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
             cartRepository.save(purchasedProduct);
 
         }else
-            throw new BadRequestException("invalid quantity for stock :(");
+            throw new StockException("invalid quantity for stock :(");
 
     }
 

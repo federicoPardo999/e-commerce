@@ -53,7 +53,20 @@ public class ControllerExceptionHandler {
         ApiError apiError = ApiError.builder()
                 .error("mail_exception")
                 .message(e.getMessage())
-                .status(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .build();
+
+        return  ResponseEntity.status(apiError.getStatus()).body(apiError);
+
+    }
+
+    @ExceptionHandler(StockException.class)
+    protected ResponseEntity<ApiError> handlerStockException(StockException e){
+
+        ApiError apiError = ApiError.builder()
+                .error("stock_exception")
+                .message(e.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
         return  ResponseEntity.status(apiError.getStatus()).body(apiError);
