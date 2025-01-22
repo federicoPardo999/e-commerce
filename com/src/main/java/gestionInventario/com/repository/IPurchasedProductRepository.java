@@ -20,7 +20,7 @@ public interface IPurchasedProductRepository extends JpaRepository<PurchasedProd
     List<PurchasedProduct> getCartsFinished(@Param("idCustomer") Long idCustomer);
 
     @Query("SELECT new  gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO" +
-            "(p.name, p.price, pp.quantity,p.price*pp.quantity) " +
+            "(p.name, p.price, pp.quantity,pp.priceTotal) " +
             "FROM Product p JOIN p.purchasedProducts pp " +
             "WHERE pp.customer.id = :idCustomer AND pp.cartStatus = :cartStatus")
     List<PurchasedProductDTO> findProductsByCustomer(@Param("idCustomer") Long idCustomer,
@@ -36,7 +36,7 @@ public interface IPurchasedProductRepository extends JpaRepository<PurchasedProd
     void deleteCart(Long idCustomer, Long idProduct);
 
     @Query("SELECT pp FROM PurchasedProduct pp where pp.customer.id = :customerId " +
-            "AND pp.product.id = :productId ")
+            "AND pp.product.id = :productId")
     PurchasedProduct findPurchasedProduct(@Param("customerId") Long customerId,
                                           @Param("productId") Long productId);
 }

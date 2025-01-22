@@ -99,7 +99,12 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
 
     @Override
     public void updateStock(PurchasedProductRequestDTO purchasedProductRequestDTO) {
-        PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct(purchasedProductRequestDTO.getCustomerId(), purchasedProductRequestDTO.getProductId());
+        PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct
+                (purchasedProductRequestDTO.getCustomerId()
+                        , purchasedProductRequestDTO.getProductId());
+
+        System.out.println("Datos: "+purchasedProduct.toString());
+
         purchasedProduct.setQuantity(purchasedProductRequestDTO.getQuantityBuyStock());
         purchasedProductRepository.save(purchasedProduct);
     }

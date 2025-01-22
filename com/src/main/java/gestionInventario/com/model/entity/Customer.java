@@ -28,6 +28,6 @@ public class Customer {
     String dni;
     String address;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     List<PurchasedProduct> purchasedProducts;
 }

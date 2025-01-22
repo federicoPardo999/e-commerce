@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
-     void createProduct(String name, Double price, Integer stock, String description, Category category, MultipartFile image) throws IOException;
+     void createProduct(String name, Double price, Integer stock, String description, Category category) throws IOException;
      List<ProductResponseDTO> getMostExpensiveProduct();
 
      List<ProductResponseDTO> getAllProducts();

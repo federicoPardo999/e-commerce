@@ -25,11 +25,10 @@ public class productController {
                                     @RequestParam("price") Double price,
                                     @RequestParam("stock") Integer stock,
                                     @RequestParam("description") String description,
-                                    @RequestParam("category") Category category,
-                                    @RequestParam("image") MultipartFile image) {
+                                    @RequestParam("category") Category category) {
         try {
             // Llamamos al servicio con los parámetros recibidos
-            productService.createProduct(name, price, stock, description, category, image);
+            productService.createProduct(name, price, stock, description, category);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

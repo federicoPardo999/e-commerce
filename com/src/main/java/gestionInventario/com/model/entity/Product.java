@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +24,12 @@ public class Product {
     Integer stock;
     String description;
 
-    String urlImage;
+    //String urlImage;
 
     @Enumerated(EnumType.STRING)
     Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     List<PurchasedProduct> purchasedProducts;
 
     public void decreaseStock(Integer stockDecrease){this.stock-=stockDecrease;}

@@ -24,14 +24,14 @@ public class ProductServiceImpl implements IProductService {
     ProductMapper productMapper;
 
     @Override
-    public void createProduct(String name, Double price, Integer stock, String description, Category category, MultipartFile image) throws IOException {
+    public void createProduct(String name, Double price, Integer stock, String description, Category category) throws IOException {
         // Guardamos la imagen en un directorio local
-        String imagePath = "C:/Users/msi" +
-                "/Downloads/Proyecto-e-commerce" +
-                "/Back-end/gestionInventario" +
-                "/com/src/main/java/gestionInventario/com/images" + image.getOriginalFilename();
+//        String imagePath = "C:/Users/msi" +
+//                "/Downloads/Proyecto-e-commerce" +
+//                "/Back-end/gestionInventario" +
+//                "/com/src/main/java/gestionInventario/com/images" + image.getOriginalFilename();
 
-        image.transferTo(new File(imagePath));  // Guardamos el archivo en el directorio
+        //image.transferTo(new File(imagePath));  // Guardamos el archivo en el directorio
 
         // Creamos el producto con la imagen guardada
         Product product = Product.builder()
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements IProductService {
                 .stock(stock)
                 .description(description)
                 .category(category)  // Usamos String o Enum según lo necesites
-                .urlImage(imagePath)  // Almacenamos la ruta de la imagen
+                //.urlImage(imagePath)  // Almacenamos la ruta de la imagen
                 .build();
 
         // Guardamos el producto en la base de datos
