@@ -12,9 +12,12 @@ public class ProductMapper {
     public ProductResponseDTO productToProductResponseDTO(Product product){
         return ProductResponseDTO
                 .builder()
+                .idProduct(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .stock(product.getStock())
+                .description(product.getDescription())
+                .image(product.getUrlImage())
                 .build();
     }
 

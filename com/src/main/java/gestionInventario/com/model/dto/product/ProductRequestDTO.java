@@ -1,16 +1,18 @@
-package gestionInventario.com.http;
+package gestionInventario.com.model.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchasedProduct {
+public class ProductRequestDTO {
     String name;
     Double price;
-    Integer stockToBuy;
+    Integer stock;
+    String description;
+
 }

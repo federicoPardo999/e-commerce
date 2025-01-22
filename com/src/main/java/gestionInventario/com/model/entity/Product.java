@@ -9,24 +9,27 @@ import java.util.List;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     Long id;
+    Long id;
 
     String name;
     Double price;
-    String description;
     Integer stock;
+    String description;
 
-     @Enumerated(EnumType.STRING)
-     Category category;
+    String urlImage;
+
+    @Enumerated(EnumType.STRING)
+    Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
-     List<Cart> carts;
+    List<PurchasedProduct> purchasedProducts;
 
     public void decreaseStock(Integer stockDecrease){this.stock-=stockDecrease;}
 

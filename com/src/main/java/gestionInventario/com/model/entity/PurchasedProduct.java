@@ -1,6 +1,5 @@
 package gestionInventario.com.model.entity;
 
-import gestionInventario.com.model.entity.utils.CustomerProductId;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,17 +11,20 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Entity
-@Table(name = "cart")
-public class Cart {
-    @EmbeddedId
-    CustomerProductId id = CustomerProductId.builder().build();
+@Table(name = "purchased_product")
+public class PurchasedProduct {
+//    @EmbeddedId
+//    CustomerProductId id = CustomerProductId.builder().build();
 
-    @MapsId("idProduct")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    //@MapsId("idProduct")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_product")
     Product product;
 
-    @MapsId("idCustomer")
+    //@MapsId("idCustomer")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_customer")
     Customer customer;

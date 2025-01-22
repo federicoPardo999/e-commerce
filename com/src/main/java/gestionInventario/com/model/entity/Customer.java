@@ -29,5 +29,5 @@ public class Customer {
     String address;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
-    List<Cart> carts;
+    List<PurchasedProduct> purchasedProducts;
 }

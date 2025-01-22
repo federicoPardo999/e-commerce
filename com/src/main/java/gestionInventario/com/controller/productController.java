@@ -1,8 +1,7 @@
 package gestionInventario.com.controller;
 
-import gestionInventario.com.exception.BadRequestException;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
-import gestionInventario.com.model.entity.Product;
+import gestionInventario.com.model.enumerator.product.Category;
 import gestionInventario.com.service.interfaces.IProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,12 +21,18 @@ public class productController {
     IProductService productService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Product product) {
-        try{
-        productService.createProduct(product);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (Exception e){
-            throw new BadRequestException(e.getMessage()+"url mal escrita");
+    public ResponseEntity<?> create(@RequestParam("name") String name,
+                                    @RequestParam("price") Double price,
+                                    @RequestParam("stock") Integer stock,
+                                    @RequestParam("description") String description,
+                                    @RequestParam("category") Category category,
+                                    @RequestParam("image") MultipartFile image) {
+        try {
+            // Llamamos al servicio con los parámetros recibidos
+            productService.createProduct(name, price, stock, description, category, image);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

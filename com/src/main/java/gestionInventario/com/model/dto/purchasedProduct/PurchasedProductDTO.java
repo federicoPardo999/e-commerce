@@ -1,4 +1,4 @@
-package gestionInventario.com.model.dto.product;
+package gestionInventario.com.model.dto.purchasedProduct;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,11 +8,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductResponseDTO {
-    Long idProduct;
+public class PurchasedProductDTO {
     String name;
     Double price;
-    String description;
-    Integer stock;
-    String image;
+    Integer stockToBuy;
+    Double pricePurchased;
 }
