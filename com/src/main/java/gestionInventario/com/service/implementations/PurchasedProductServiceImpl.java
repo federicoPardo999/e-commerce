@@ -15,6 +15,7 @@ import gestionInventario.com.repository.IPurchasedProductRepository;
 import gestionInventario.com.repository.ICustomerRepository;
 import gestionInventario.com.repository.IProductRepository;
 import gestionInventario.com.service.interfaces.IPurchasedProductService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,9 +39,6 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
                 .orElseThrow( ()-> new NotFoundException("product not founded"));
 
         Customer customer = findCustomer(cartItemDTO.getCustomerId());
-        //aca podria poner un condicional y actualizar el carrito si es que ya existe
-
-        //actualizar l compra si se vuelve a comprar un mismo producto
         Integer stock = product.getStock();
         Integer stockToBuy = cartItemDTO.getQuantityBuyStock();
         Double price = product.getPrice();
@@ -81,7 +79,6 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
     @Override
     public PurchasedProductResponseDTO getBuyCart(Long idCustomer) {
         List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
-
         Customer customer = findCustomer(idCustomer);
         Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, CartStatus.IN_PROGRESS);
 
@@ -97,15 +94,20 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
         purchasedProductRepository.deleteCart(idCustomer,idProduct);
     }
 
+    @Transactional
     @Override
     public void updateStock(PurchasedProductRequestDTO purchasedProductRequestDTO) {
-        PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct
-                (purchasedProductRequestDTO.getCustomerId()
-                        , purchasedProductRequestDTO.getProductId());
-
-        System.out.println("Datos: "+purchasedProduct.toString());
+        PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct(
+            purchasedProductRequestDTO.getCustomerId(),
+                purchasedProductRequestDTO.getProductId());
 
         purchasedProduct.setQuantity(purchasedProductRequestDTO.getQuantityBuyStock());
+        Double totalSpent = purchasedProductRepository.findTotalSpentOfIndividualBuy(
+                purchasedProductRequestDTO.getCustomerId(),
+                purchasedProductRequestDTO.getProductId(),
+                CartStatus.IN_PROGRESS);
+
+        purchasedProduct.setPriceTotal(totalSpent);
         purchasedProductRepository.save(purchasedProduct);
     }
 

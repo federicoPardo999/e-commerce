@@ -57,8 +57,8 @@ public class OrderServiceImpl implements IOrderService {
 
         orderRepository.save(order);
 
-        notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
-                "Pedido realizado con exito");
+        //notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
+          //      "Pedido realizado con exito");
 
     }
 

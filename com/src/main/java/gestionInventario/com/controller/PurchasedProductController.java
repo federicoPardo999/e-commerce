@@ -40,8 +40,7 @@ public class PurchasedProductController {
     }
 
     @PatchMapping("/update-stock")
-
-    public ResponseEntity<?> updateStock(PurchasedProductRequestDTO purchasedProductRequestDTO){
+    public ResponseEntity<?> updateStock(@RequestBody  PurchasedProductRequestDTO purchasedProductRequestDTO){
         purchasedProductService.updateStock(purchasedProductRequestDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -13,6 +13,12 @@ import java.util.List;
 
 @Repository
 public interface IPurchasedProductRepository extends JpaRepository<PurchasedProduct, PurchasedProduct> {
+
+    @Query("SELECT pp FROM PurchasedProduct pp where pp.customer.id = :customerId " +
+            "AND pp.product.id = :productId")
+    PurchasedProduct findPurchasedProduct(@Param("customerId") Long customerId,
+                                          @Param("productId") Long productId);
+
     @Query("SELECT pp FROM PurchasedProduct pp WHERE pp.customer.id = :idCustomer AND pp.cartStatus = 'IN_PROGRESS'")
     List<PurchasedProduct> findCartsInProgress(@Param("idCustomer") Long idCustomer);
 
@@ -20,13 +26,13 @@ public interface IPurchasedProductRepository extends JpaRepository<PurchasedProd
     List<PurchasedProduct> getCartsFinished(@Param("idCustomer") Long idCustomer);
 
     @Query("SELECT new  gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO" +
-            "(p.name, p.price, pp.quantity,pp.priceTotal) " +
+            "(p.name, p.price, pp.quantity,p.price * pp.quantity) " +
             "FROM Product p JOIN p.purchasedProducts pp " +
             "WHERE pp.customer.id = :idCustomer AND pp.cartStatus = :cartStatus")
     List<PurchasedProductDTO> findProductsByCustomer(@Param("idCustomer") Long idCustomer,
                                                      @Param("cartStatus")CartStatus cartStatus);
 
-    @Query("SELECT SUM(pp.priceTotal) FROM PurchasedProduct pp  where pp.customer.id = :idCustomer " +
+    @Query("SELECT sum(p.price * pp.quantity) FROM PurchasedProduct pp JOIN pp.product p  where pp.customer.id = :idCustomer " +
             "AND pp.cartStatus = :cartStatus")
     Double findTotalSpentOfCartBuy(@Param("idCustomer") Long idCustomer,
                                    @Param("cartStatus")CartStatus cartStatus);
@@ -35,8 +41,11 @@ public interface IPurchasedProductRepository extends JpaRepository<PurchasedProd
     @Query("UPDATE PurchasedProduct pp SET pp.cartStatus = 'CANCELED' WHERE pp.cartStatus = 'IN_PROGRESS' AND pp.product.id = :idProduct AND pp.customer.id = :idCustomer")
     void deleteCart(Long idCustomer, Long idProduct);
 
-    @Query("SELECT pp FROM PurchasedProduct pp where pp.customer.id = :customerId " +
-            "AND pp.product.id = :productId")
-    PurchasedProduct findPurchasedProduct(@Param("customerId") Long customerId,
-                                          @Param("productId") Long productId);
+    @Query("SELECT p.price * pp.quantity FROM PurchasedProduct pp JOIN pp.product p" +
+            " where pp.customer.id = :idCustomer" +
+            " AND pp.product.id = :idProduct" +
+            " AND pp.cartStatus = :cartStatus")
+    Double findTotalSpentOfIndividualBuy(@Param("idCustomer") Long idCustomer,
+                                         @Param("idProduct") Long idProduct,
+                                         @Param("cartStatus") CartStatus cartStatus);
 }
