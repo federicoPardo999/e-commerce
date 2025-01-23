@@ -7,12 +7,12 @@ import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.mapper.purchasedProduct.PurchasedProductMapper;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductRequestDTO;
 import gestionInventario.com.model.dto.purchasedProduct.CartResponseDTO;
-import gestionInventario.com.model.entity.Customer;
+import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.repository.IPurchasedProductRepository;
-import gestionInventario.com.repository.ICustomerRepository;
+import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IProductRepository;
 import gestionInventario.com.service.interfaces.IPurchasedProductService;
 import jakarta.transaction.Transactional;
@@ -28,7 +28,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class PurchasedProductServiceImpl implements IPurchasedProductService {
     IProductRepository productRepository;
-    ICustomerRepository customerRepository;
+    IUserRepository customerRepository;
     IPurchasedProductRepository purchasedProductRepository;
     PurchasedProductMapper purchasedProductMapper;
 
@@ -38,7 +38,7 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
         Product product = productRepository.findById(cartItemDTO.getProductId())
                 .orElseThrow( ()-> new NotFoundException("product not founded"));
 
-        Customer customer = findCustomer(cartItemDTO.getCustomerId());
+        UserEntity customer = findCustomer(cartItemDTO.getCustomerId());
         Integer stock = product.getStock();
         Integer stockToBuy = cartItemDTO.getQuantityBuyStock();
         Double price = product.getPrice();
@@ -79,7 +79,7 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
     @Override
     public PurchasedProductResponseDTO getBuyCart(Long idCustomer) {
         List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
-        Customer customer = findCustomer(idCustomer);
+        UserEntity customer = findCustomer(idCustomer);
         Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, CartStatus.IN_PROGRESS);
 
         return PurchasedProductResponseDTO.builder()
@@ -111,7 +111,7 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
         purchasedProductRepository.save(purchasedProduct);
     }
 
-    private Customer findCustomer(Long idCustomer) {
+    private UserEntity findCustomer(Long idCustomer) {
         return customerRepository.findById(idCustomer)
                 .orElseThrow( ()-> new NotFoundException("customer not founded"));
     }

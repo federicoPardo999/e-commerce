@@ -57,7 +57,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity<ApiError> handlerNotFoundExceptionException(NotFoundException e){
         ApiError apiError = ApiError.builder()
-                .error("bad_request")
+                .error("not_found")
                 .message(e.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
                 .build();

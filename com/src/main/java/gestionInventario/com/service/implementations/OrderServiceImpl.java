@@ -4,12 +4,12 @@ import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.PurchasedProduct;
-import gestionInventario.com.model.entity.Customer;
+import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.OrderEntity;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.notification.NotificationService;
 import gestionInventario.com.repository.IPurchasedProductRepository;
-import gestionInventario.com.repository.ICustomerRepository;
+import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IOrderRepository;
 import gestionInventario.com.service.interfaces.IOrderService;
 import lombok.AccessLevel;
@@ -25,7 +25,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class OrderServiceImpl implements IOrderService {
     IPurchasedProductRepository cartRepository;
-    ICustomerRepository customerRepository;
+    IUserRepository customerRepository;
     IOrderRepository orderRepository;
 
     NotificationService notificationService;
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements IOrderService {
     //refactoriazar para que tenga menos lineas
     @Override
     public void createOrder(Long idCustomer){
-        Customer customer = customerRepository.findById(idCustomer)
+        UserEntity customer = customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new NotFoundException("Customer with id: "+idCustomer+ ", not found"));
         List<PurchasedProduct> purchasedProducts = cartRepository.findCartsInProgress(idCustomer);
 
@@ -66,7 +66,7 @@ public class OrderServiceImpl implements IOrderService {
     public PurchasedProductResponseDTO getPurchasedHistory(Long idCustomer) {
         List<PurchasedProductDTO> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.FINISHED);
 
-        Customer customer = customerRepository.findById(idCustomer).orElseThrow(()->
+        UserEntity customer = customerRepository.findById(idCustomer).orElseThrow(()->
                 new NotFoundException("don't founded customer with id: "+idCustomer));
         Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.FINISHED);
 
