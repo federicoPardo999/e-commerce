@@ -6,7 +6,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +24,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtService {
-    private static final String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
-    private Map<String, Date> blacklist = new HashMap<>();
-    private ScheduledExecutorService scheduler;
+     static final String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+     Map<String, Date> blacklist = new HashMap<>();
+     ScheduledExecutorService scheduler;
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
@@ -101,7 +104,6 @@ public class JwtService {
         blacklist.entrySet().removeIf(entry -> entry.getValue().before(now));
     }
 
-    // Cada 1 día borra los tokens de la blacklist
     @PostConstruct
     public void scheduleTokenCleanup() {
         scheduler = Executors.newScheduledThreadPool(1);

@@ -38,13 +38,14 @@ public class AuthImplService implements IAuthService {
         return LoginResponseDTO.builder()
                 .username(userDto.getUsername())
                 .token(jwtService.getToken(user))
+                .role(user.getRole())
                 .build();
     }
 
     @Override
     public LoginResponseDTO register(RegisterRequestDTO userToRegisterDto) {
         if(userRepository.existsByUsername(userToRegisterDto.getUsername())){
-            throw new RegisterException("ya existe el usuario: "+userToRegisterDto.getUsername());
+            throw new RegisterException("the user have exists: "+userToRegisterDto.getUsername());
         }
 
         UserEntity user = UserEntity.builder()
@@ -54,6 +55,8 @@ public class AuthImplService implements IAuthService {
                 .address(userToRegisterDto.getAddress())
                 .role(userToRegisterDto.getRole())
                 .build();
+
+        System.out.println("enum del rol: "+user.getRole().toString());
 
         userRepository.save(user);
 

@@ -39,7 +39,7 @@ public class UserEntity implements UserDetails {
     String mail;
     String address;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     List<PurchasedProduct> purchasedProducts;
 
     @Override

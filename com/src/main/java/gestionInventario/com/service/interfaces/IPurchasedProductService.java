@@ -9,10 +9,15 @@ import java.util.List;
 public interface IPurchasedProductService {
 
     void createCartItem(PurchasedProductRequestDTO saleRequestDTO);
+
     List<CartResponseDTO> getAllCarts(Long idCustomer);
+
     List<CartResponseDTO> getCartsFinished(Long idCustomer);
+
     PurchasedProductResponseDTO getBuyCart(Long idCustomer);
+
     void deleteCart(Long idCustomer, Long idProduct);
+
     void updateStock(PurchasedProductRequestDTO purchasedProductRequestDTO);
 
 }

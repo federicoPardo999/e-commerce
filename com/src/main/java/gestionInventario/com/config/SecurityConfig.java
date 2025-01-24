@@ -34,7 +34,6 @@ public class SecurityConfig {
     private static final String ADMIN = Role.ADMIN.toString();
     private static final String CUSTOMER = Role.CUSTOMER.toString();
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -73,26 +72,29 @@ public class SecurityConfig {
     private void configurePublicEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/ping").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.GET, "product/get-all").hasAnyRole(CUSTOMER, ADMIN)
                 .requestMatchers(HttpMethod.GET,"/product/get-by-category/{catefory}").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+
     }
 
     private void configureCustomerEndPoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.POST,"/buy/create").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.PATCH,"buy/update-stock").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.PATCH,"/buy/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.PATCH,"/buy/delete-cart/{idCustomer}/{idProduct}").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.POST,"/order/crete").hasRole(CUSTOMER);
     }
 
     private void configureAdminEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
-                .requestMatchers(HttpMethod.POST,"product/create").hasRole(ADMIN)
-                .requestMatchers(HttpMethod.GET,"customer/all-customers").hasRole(ADMIN);
+                .requestMatchers(HttpMethod.POST,"/product/create").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.GET,"/customer/all-customers").hasRole(ADMIN)
+                .requestMatchers(HttpMethod.GET, "/product/get-all").hasRole(ADMIN);
+
     }
 
 }

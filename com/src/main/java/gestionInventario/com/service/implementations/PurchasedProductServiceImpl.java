@@ -51,11 +51,10 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
             PurchasedProduct purchasedProduct = PurchasedProduct
                     .builder()
                     .product(product)
-                    .customer(customer)
                     .priceTotal(itemCartPrice)
                     .quantity(stockToBuy)
                     .product(product)
-                    .customer(customer)
+                    .userEntity(customer)
                     .cartStatus(CartStatus.IN_PROGRESS)
                     .build();
 

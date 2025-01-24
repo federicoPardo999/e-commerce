@@ -27,8 +27,8 @@ public class PurchasedProduct {
 
     //@MapsId("idCustomer")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_customer")
-    UserEntity customer;
+    @JoinColumn(name = "user_id")
+        UserEntity userEntity;
 
     Integer quantity;
 

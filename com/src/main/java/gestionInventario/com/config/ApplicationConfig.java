@@ -1,7 +1,9 @@
 package gestionInventario.com.config;
 
 import gestionInventario.com.repository.IUserRepository;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +19,10 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ApplicationConfig {
 
-    private final IUserRepository iUserRepository;
+    IUserRepository iUserRepository;
 
     @Bean
     public RestTemplate restTemplate() {

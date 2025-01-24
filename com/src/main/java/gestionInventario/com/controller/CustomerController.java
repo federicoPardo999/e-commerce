@@ -1,6 +1,5 @@
 package gestionInventario.com.controller;
 
-import gestionInventario.com.model.dto.customer.CustomerResponseDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.service.interfaces.ICustomerService;
 import lombok.AccessLevel;
@@ -9,8 +8,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
