@@ -2,15 +2,13 @@ package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.exception.StockException;
-import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
-import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
+import gestionInventario.com.model.dto.purchasedProduct.*;
 import gestionInventario.com.mapper.purchasedProduct.PurchasedProductMapper;
-import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductRequestDTO;
-import gestionInventario.com.model.dto.purchasedProduct.CartResponseDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
+import gestionInventario.com.model.enumerator.user.Role;
 import gestionInventario.com.repository.IPurchasedProductRepository;
 import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IProductRepository;
@@ -39,20 +37,17 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
                 .orElseThrow( ()-> new NotFoundException("product not founded"));
 
         UserEntity customer = findCustomer(cartItemDTO.getCustomerId());
-        Integer stock = product.getStock();
-        Integer stockToBuy = cartItemDTO.getQuantityBuyStock();
-        Double price = product.getPrice();
 
-        if(stockToBuyIsValid(stock,stockToBuy)){
+        if(stockToBuyIsValid(product.getStock(),cartItemDTO.getQuantityBuyStock())){
 
-            product.decreaseStock(stockToBuy);
-            Double itemCartPrice = price* stockToBuy;
+            product.decreaseStock(cartItemDTO.getQuantityBuyStock());
+            Double itemCartPrice = product.getPrice() * cartItemDTO.getQuantityBuyStock();
 
             PurchasedProduct purchasedProduct = PurchasedProduct
                     .builder()
                     .product(product)
                     .priceTotal(itemCartPrice)
-                    .quantity(stockToBuy)
+                    .quantity(cartItemDTO.getQuantityBuyStock())
                     .product(product)
                     .userEntity(customer)
                     .cartStatus(CartStatus.IN_PROGRESS)
@@ -89,8 +84,13 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
     }
 
     @Override
-    public void deleteCart(Long idCustomer, Long idProduct) {
-        purchasedProductRepository.deleteCart(idCustomer,idProduct);
+    public void deleteCart(BuyDeleteDTO buyDeleteDTO) {
+        PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct(
+                buyDeleteDTO.getIdCustomer(),buyDeleteDTO.getIdProduct()
+        );
+        purchasedProduct.setCartStatus(CartStatus.CANCELED);
+
+        purchasedProductRepository.save(purchasedProduct);
     }
 
     @Transactional

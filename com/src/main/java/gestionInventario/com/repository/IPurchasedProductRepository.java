@@ -15,7 +15,7 @@ import java.util.List;
 public interface IPurchasedProductRepository extends JpaRepository<PurchasedProduct, PurchasedProduct> {
 
     @Query("SELECT pp FROM PurchasedProduct pp where pp.userEntity.id = :userEntityId " +
-            "AND pp.product.id = :productId")
+            "AND pp.product.id = :productId AND pp.cartStatus = 'IN_PROGRESS")
     PurchasedProduct findPurchasedProduct(@Param("userEntityId") Long userEntityId,
                                           @Param("productId") Long productId);
 

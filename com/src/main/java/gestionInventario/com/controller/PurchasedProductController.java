@@ -1,5 +1,6 @@
 package gestionInventario.com.controller;
 
+import gestionInventario.com.model.dto.purchasedProduct.BuyDeleteDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductRequestDTO;
 
 import gestionInventario.com.service.interfaces.IPurchasedProductService;
@@ -45,9 +46,9 @@ public class PurchasedProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/delete-cart/{idCustomer}/{idProduct}")
-    public ResponseEntity<?> deleteCart(@PathVariable Long idCustomer, @PathVariable Long idProduct) {
-        purchasedProductService.deleteCart(idCustomer, idProduct);
+    @PatchMapping("/delete-cart")
+    public ResponseEntity<?> deleteCart(@RequestBody BuyDeleteDTO buyDeleteDTO) {
+        purchasedProductService.deleteCart(buyDeleteDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -58,7 +58,7 @@ public class SecurityConfig {
 @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://3.95.1.110", "http://3.95.1.110:80"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
@@ -74,9 +74,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/ping").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers(HttpMethod.GET,"/product/get-by-category/{catefory}").hasAnyRole(CUSTOMER,ADMIN)
+                //.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 
     }
@@ -86,6 +84,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/buy/create").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.PATCH,"/buy/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.PATCH,"/buy/delete-cart/{idCustomer}/{idProduct}").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.GET,"/buy/get-cart/{idCustomer}").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.POST,"/order/crete").hasRole(CUSTOMER);
     }
 
