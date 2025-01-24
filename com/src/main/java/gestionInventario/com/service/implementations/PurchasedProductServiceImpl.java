@@ -8,7 +8,6 @@ import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
-import gestionInventario.com.model.enumerator.user.Role;
 import gestionInventario.com.repository.IPurchasedProductRepository;
 import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IProductRepository;
@@ -67,7 +66,7 @@ public class PurchasedProductServiceImpl implements IPurchasedProductService {
 
     @Override
     public List<CartResponseDTO> getCartsFinished(Long idCustomer) {
-        return purchasedProductMapper.cartsToCartResponseDTO(purchasedProductRepository.getCartsFinished(idCustomer));
+        return purchasedProductMapper.cartsToCartResponseDTO(purchasedProductRepository.findOrders(idCustomer));
     }
 
     @Override
