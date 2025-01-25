@@ -4,14 +4,15 @@ import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.PurchasedProduct;
-import gestionInventario.com.model.entity.Customer;
+import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.OrderEntity;
-import gestionInventario.com.model.enumerator.cart.CartStatus;
+import gestionInventario.com.model.enumerator.cart.purchaseStatus;
 import gestionInventario.com.notification.NotificationService;
-import gestionInventario.com.repository.IPurchasedProductRepository;
-import gestionInventario.com.repository.ICustomerRepository;
+import gestionInventario.com.repository.IPurchaseRepository;
+import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IOrderRepository;
 import gestionInventario.com.service.interfaces.IOrderService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,27 +25,23 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class OrderServiceImpl implements IOrderService {
-    IPurchasedProductRepository cartRepository;
-    ICustomerRepository customerRepository;
+    IPurchaseRepository purchaseRepository;
+    IUserRepository customerRepository;
     IOrderRepository orderRepository;
-
     NotificationService notificationService;
 
     //refactoriazar para que tenga menos lineas
+
+    //DISMINUIR STOCK CUANDO FINALIZA LA COMPRA , NO TIENE SENTIDO HACERELO ANTES
     @Override
+    @Transactional
     public void createOrder(Long idCustomer){
-        Customer customer = customerRepository.findById(idCustomer)
+        UserEntity customer = customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new NotFoundException("Customer with id: "+idCustomer+ ", not found"));
-        List<PurchasedProduct> purchasedProducts = cartRepository.findCartsInProgress(idCustomer);
 
-        Double orderPrice = 0.0;
-        Integer quantity = 0;
-
-        for (PurchasedProduct purchasedProduct : purchasedProducts) {
-            orderPrice += purchasedProduct.getPriceTotal();
-            purchasedProduct.setCartStatus(CartStatus.FINISHED);
-            quantity += purchasedProduct.getQuantity();
-        }
+        purchaseRepository.doPurchase(idCustomer);
+        Double orderPrice = purchaseRepository.findTotalAmountCart(idCustomer);
+        Integer quantity = purchaseRepository.findTotalQuantityToBuy(idCustomer);
 
         OrderEntity order = OrderEntity
                 .builder()
@@ -56,7 +53,6 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
 
         orderRepository.save(order);
-
         //notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
           //      "Pedido realizado con exito");
 
@@ -64,11 +60,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public PurchasedProductResponseDTO getPurchasedHistory(Long idCustomer) {
-        List<PurchasedProductDTO> products = cartRepository.findProductsByCustomer(idCustomer,CartStatus.FINISHED);
+        List<PurchasedProductDTO> products = purchaseRepository.findProductsByCustomer(idCustomer, purchaseStatus.FINISHED);
 
-        Customer customer = customerRepository.findById(idCustomer).orElseThrow(()->
+        UserEntity customer = customerRepository.findById(idCustomer).orElseThrow(()->
                 new NotFoundException("don't founded customer with id: "+idCustomer));
-        Double totalSpent = cartRepository.findTotalSpentOfCartBuy(idCustomer,CartStatus.FINISHED);
+        Double totalSpent = purchaseRepository.findTotalSpentOfCartBuy(idCustomer, purchaseStatus.FINISHED);
 
         return PurchasedProductResponseDTO.builder()
                 .nameCustomer(customer.getUsername())

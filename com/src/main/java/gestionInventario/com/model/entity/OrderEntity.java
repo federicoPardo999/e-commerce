@@ -22,7 +22,7 @@ public class OrderEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    Customer customer;
+    UserEntity customer;
 
     @Column(name = "price_total")
     Double priceTotal;

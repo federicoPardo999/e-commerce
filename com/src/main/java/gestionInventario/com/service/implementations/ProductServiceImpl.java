@@ -6,6 +6,7 @@ import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.enumerator.product.Category;
 import gestionInventario.com.repository.IProductRepository;
 import gestionInventario.com.service.interfaces.IProductService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +25,7 @@ public class ProductServiceImpl implements IProductService {
     ProductMapper productMapper;
 
     @Override
+    @Transactional
     public void createProduct(String name, Double price, Integer stock, String description, Category category) throws IOException {
         // Guardamos la imagen en un directorio local
 //        String imagePath = "C:/Users/msi" +
@@ -42,7 +44,7 @@ public class ProductServiceImpl implements IProductService {
                 .category(category)  // Usamos String o Enum según lo necesites
                 //.urlImage(imagePath)  // Almacenamos la ruta de la imagen
                 .build();
-
+        System.out.println("I ONCE WAS SEVEN YEARS OLD");
         // Guardamos el producto en la base de datos
         productRepository.save(product);
     }

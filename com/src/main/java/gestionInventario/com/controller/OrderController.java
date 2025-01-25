@@ -1,5 +1,6 @@
 package gestionInventario.com.controller;
 
+import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.service.implementations.OrderServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static gestionInventario.com.controller.contextUser.GetUser.getUserFromToken;
+
 @RestController
 @RequestMapping("/order")
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
@@ -15,16 +18,18 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     OrderServiceImpl orderService;
 
-    //esto deberia ser un request dto o param
-    @PostMapping("/create/{idCustomer}")
-    public ResponseEntity<?> create(@PathVariable Long idCustomer){
-        orderService.createOrder(idCustomer);
+    @PostMapping("/create")
+    public ResponseEntity<?> create(){
+        UserEntity user = getUserFromToken();
+        orderService.createOrder(user.getId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/purchased-history/{idCustomer}")
-    public ResponseEntity<?> getPurchasedHistory(@PathVariable Long idCustomer) {
-        return ResponseEntity.ok(orderService.getPurchasedHistory(idCustomer));
+    @GetMapping("/get-orders")
+    public ResponseEntity<?> getPurchasedHistory() {
+        UserEntity user = getUserFromToken();
+        return ResponseEntity.ok(orderService.getPurchasedHistory(user.getId()));
     }
+
 }
 

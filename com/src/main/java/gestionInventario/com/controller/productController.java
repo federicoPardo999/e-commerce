@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class productController {
     IProductService productService;
 
@@ -37,16 +37,20 @@ public class productController {
 
     @GetMapping("/get-most-expensive")
     public ResponseEntity<List<ProductResponseDTO>> getMostExpensivesProduct() {
-        return  ResponseEntity.ok(productService.getMostExpensiveProduct());
+        return ResponseEntity.ok(productService.getMostExpensiveProduct());
     }
 
+
     @GetMapping("get-all")
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts(){
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+
     @GetMapping("get-by-category/{category}")
-    public ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable String category){
+    public ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
+
+
 }
