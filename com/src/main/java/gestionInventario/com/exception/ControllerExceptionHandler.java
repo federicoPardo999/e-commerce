@@ -43,21 +43,21 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    protected ResponseEntity<ApiError> handlerBadRequestException(BadRequestException e){
+    protected ResponseEntity<ApiError> handlerBadRequestException(BadRequestException e) {
         ApiError apiError = ApiError.builder()
                 .error("bad_request")
                 .message(e.getMessage())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
-        return  ResponseEntity.status(apiError.getStatus()).body(apiError);
+        return ResponseEntity.status(apiError.getStatus()).body(apiError);
 
     }
 
     @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity<ApiError> handlerNotFoundExceptionException(NotFoundException e){
         ApiError apiError = ApiError.builder()
-                .error("bad_request")
+                .error("not_found")
                 .message(e.getMessage())
                 .status(HttpStatus.NOT_FOUND.value())
                 .build();
