@@ -44,8 +44,7 @@ public class ProductServiceImpl implements IProductService {
                 .category(category)  // Usamos String o Enum según lo necesites
                 //.urlImage(imagePath)  // Almacenamos la ruta de la imagen
                 .build();
-        System.out.println("I ONCE WAS SEVEN YEARS OLD");
-        // Guardamos el producto en la base de datos
+
         productRepository.save(product);
     }
 

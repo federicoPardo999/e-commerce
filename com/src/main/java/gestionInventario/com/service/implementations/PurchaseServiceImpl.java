@@ -6,7 +6,7 @@ import gestionInventario.com.model.dto.purchasedProduct.*;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.Product;
-import gestionInventario.com.model.enumerator.cart.purchaseStatus;
+import gestionInventario.com.model.enumerator.cart.PurchaseStatus;
 import gestionInventario.com.repository.IPurchaseRepository;
 import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IProductRepository;
@@ -46,21 +46,17 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 .quantity(cartItemDTO.getQuantityBuyStock())
                 .product(product)
                 .userEntity(customer)
-                .purchaseStatus(purchaseStatus.IN_PROGRESS)
+                .purchaseStatus(PurchaseStatus.IN_PROGRESS)
                 .build();
 
         purchasedProductRepository.save(purchasedProduct);
     }
 
-    private void validateStock(Integer stock, Integer quantityBuyStock) {
-        if (stock - quantityBuyStock < 0)
-            throw new StockException("quantity to be purchased cannot exceed the available stock");
-    }
-
+    @Override
     public PurchasedProductResponseDTO getCartFromUser(Long idCustomer) {
-        List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, purchaseStatus.IN_PROGRESS);
+        List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, PurchaseStatus.IN_PROGRESS);
         UserEntity customer = findCustomer(idCustomer);
-        Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, purchaseStatus.IN_PROGRESS);
+        Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, PurchaseStatus.IN_PROGRESS);
 
         return PurchasedProductResponseDTO.builder()
                 .nameCustomer(customer.getUsername())
@@ -69,11 +65,13 @@ public class PurchaseServiceImpl implements IPurchaseService {
                 .build();
     }
 
+    @Override
+    @Transactional
     public void cancelPurchased(BuyDeleteDTO buyDeleteDTO) {
         PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct(
                 buyDeleteDTO.getIdCustomer(), buyDeleteDTO.getIdProduct()
         );
-        purchasedProduct.setPurchaseStatus(purchaseStatus.CANCELED);
+        purchasedProduct.setPurchaseStatus(PurchaseStatus.CANCELED);
 
         purchasedProductRepository.save(purchasedProduct);
     }
@@ -96,7 +94,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         Double purchasePrice = purchasedProductRepository.findTotalSpentOfIndividualBuy(
                 purchaseRequestDTO.getCustomerId(),
                 purchaseRequestDTO.getProductId(),
-                purchaseStatus.IN_PROGRESS);
+                PurchaseStatus.IN_PROGRESS);
 
         purchase.setPriceTotal(purchasePrice);
         purchasedProductRepository.save(purchase);
@@ -105,6 +103,11 @@ public class PurchaseServiceImpl implements IPurchaseService {
     private Product findProduct(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("product not founded"));
+    }
+
+    private void validateStock(Integer stock, Integer quantityBuyStock) {
+        if (stock - quantityBuyStock < 0)
+            throw new StockException("quantity to be purchased cannot exceed the available stock");
     }
 
     private UserEntity findCustomer(Long idCustomer) {

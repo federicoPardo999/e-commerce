@@ -3,10 +3,9 @@ package gestionInventario.com.service.implementations;
 import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
-import gestionInventario.com.model.entity.PurchasedProduct;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.OrderEntity;
-import gestionInventario.com.model.enumerator.cart.purchaseStatus;
+import gestionInventario.com.model.enumerator.cart.PurchaseStatus;
 import gestionInventario.com.notification.NotificationService;
 import gestionInventario.com.repository.IPurchaseRepository;
 import gestionInventario.com.repository.IUserRepository;
@@ -30,9 +29,6 @@ public class OrderServiceImpl implements IOrderService {
     IOrderRepository orderRepository;
     NotificationService notificationService;
 
-    //refactoriazar para que tenga menos lineas
-
-    //DISMINUIR STOCK CUANDO FINALIZA LA COMPRA , NO TIENE SENTIDO HACERELO ANTES
     @Override
     @Transactional
     public void createOrder(Long idCustomer){
@@ -53,18 +49,18 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
 
         orderRepository.save(order);
-        //notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
-          //      "Pedido realizado con exito");
+//        notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
+//                "Pedido realizado con exito muchas gracias "+customer.getUsername());
 
     }
 
     @Override
-    public PurchasedProductResponseDTO getPurchasedHistory(Long idCustomer) {
-        List<PurchasedProductDTO> products = purchaseRepository.findProductsByCustomer(idCustomer, purchaseStatus.FINISHED);
+    public PurchasedProductResponseDTO getOrderHistory(Long idCustomer) {
+        List<PurchasedProductDTO> products = purchaseRepository.findProductsByCustomer(idCustomer, PurchaseStatus.FINISHED);
 
         UserEntity customer = customerRepository.findById(idCustomer).orElseThrow(()->
                 new NotFoundException("don't founded customer with id: "+idCustomer));
-        Double totalSpent = purchaseRepository.findTotalSpentOfCartBuy(idCustomer, purchaseStatus.FINISHED);
+        Double totalSpent = purchaseRepository.findTotalSpentOfCartBuy(idCustomer, PurchaseStatus.FINISHED);
 
         return PurchasedProductResponseDTO.builder()
                 .nameCustomer(customer.getUsername())

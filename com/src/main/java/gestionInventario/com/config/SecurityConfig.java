@@ -85,7 +85,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH,"/purchase/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.PATCH,"/purchase/delete").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET,"/purchase/get-cart").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.POST,"/order/crete").hasRole(CUSTOMER);
+                .requestMatchers(HttpMethod.POST,"/order/create").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.GET,"/order/get-orders").hasRole(CUSTOMER);
     }
 
     private void configureAdminEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {

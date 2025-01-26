@@ -28,7 +28,7 @@ public class OrderController {
     @GetMapping("/get-orders")
     public ResponseEntity<?> getPurchasedHistory() {
         UserEntity user = getUserFromToken();
-        return ResponseEntity.ok(orderService.getPurchasedHistory(user.getId()));
+        return ResponseEntity.ok(orderService.getOrderHistory(user.getId()));
     }
 
 }

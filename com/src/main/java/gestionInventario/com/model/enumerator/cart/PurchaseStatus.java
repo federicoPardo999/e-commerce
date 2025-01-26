@@ -1,6 +1,6 @@
 package gestionInventario.com.model.enumerator.cart;
 
-public enum purchaseStatus {
+public enum PurchaseStatus {
     IN_PROGRESS,
     FINISHED,
     CANCELED

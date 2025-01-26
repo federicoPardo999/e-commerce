@@ -4,5 +4,5 @@ import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponse
 
 public interface IOrderService {
      void createOrder(Long idCustomer);
-     PurchasedProductResponseDTO getPurchasedHistory(Long idCustomer);
+     PurchasedProductResponseDTO getOrderHistory(Long idCustomer);
 }

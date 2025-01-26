@@ -1,6 +1,6 @@
 package gestionInventario.com.model.entity;
 
-import gestionInventario.com.model.enumerator.cart.purchaseStatus;
+import gestionInventario.com.model.enumerator.cart.PurchaseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +25,7 @@ public class PurchasedProduct {
     @JoinColumn(name = "user_id")
         UserEntity userEntity;
 
+
     Integer quantity;
 
     @Column(name = "price_total")
@@ -32,5 +33,5 @@ public class PurchasedProduct {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cart_status")
-    purchaseStatus purchaseStatus;
+    PurchaseStatus purchaseStatus;
 }

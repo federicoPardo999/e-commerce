@@ -52,5 +52,4 @@ public class productController {
         return ResponseEntity.ok(productService.getProductsByCategory(category));
     }
 
-
 }
