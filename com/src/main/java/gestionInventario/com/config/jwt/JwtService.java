@@ -24,10 +24,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtService {
-    private static final String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
-    private  Map<String, Date> blacklist = new HashMap<>();
-    private  ScheduledExecutorService scheduler;
+    static final String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+    Map<String, Date> blacklist = new HashMap<>();
+    ScheduledExecutorService scheduler;
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
@@ -38,7 +39,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

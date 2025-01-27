@@ -32,6 +32,6 @@ public class PurchasedProduct {
     Double priceTotal;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "cart_status")
+    @Column(name = "purchase_status")
     PurchaseStatus purchaseStatus;
 }

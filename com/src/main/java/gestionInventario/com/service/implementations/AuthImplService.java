@@ -56,8 +56,6 @@ public class AuthImplService implements IAuthService {
                 .role(userToRegisterDto.getRole())
                 .build();
 
-        System.out.println("enum del rol: "+user.getRole().toString());
-
         userRepository.save(user);
 
         return LoginResponseDTO.builder()

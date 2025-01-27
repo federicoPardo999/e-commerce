@@ -17,28 +17,28 @@ public class ControllerExceptionHandler {
                 .build();
 
         return  ResponseEntity.status(apiError.getStatus()).body(apiError);
-
     }
+
     @ExceptionHandler(RegisterException.class)
-    protected ResponseEntity<ApiError> handlerBadRequestException(RegisterException e){
+    protected ResponseEntity<ApiError> handleRegisterException(RegisterException e){
         ApiError apiError = ApiError.builder()
                 .error("register_exception")
                 .message(e.getMessage())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
-        return  ResponseEntity.status(apiError.getStatus()).body(apiError);
+        return ResponseEntity.status(apiError.getStatus()).body(apiError);
     }
 
     @ExceptionHandler(LoginException.class)
-    protected ResponseEntity<ApiError> handlerBadRequestException(LoginException e){
+    protected ResponseEntity<ApiError> handlerLoginException(LoginException e) {
         ApiError apiError = ApiError.builder()
                 .error("login_exception")
                 .message(e.getMessage())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .build();
 
-        return  ResponseEntity.status(apiError.getStatus()).body(apiError);
+        return ResponseEntity.status(apiError.getStatus()).body(apiError);
 
     }
 
@@ -51,7 +51,6 @@ public class ControllerExceptionHandler {
                 .build();
 
         return ResponseEntity.status(apiError.getStatus()).body(apiError);
-
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -63,7 +62,6 @@ public class ControllerExceptionHandler {
                 .build();
 
         return  ResponseEntity.status(apiError.getStatus()).body(apiError);
-
     }
 
     @ExceptionHandler(MailSendException.class)

@@ -86,14 +86,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH,"/purchase/delete").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET,"/purchase/get-cart").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.POST,"/order/create").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.GET, "/product/get-all").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.GET,"/order/get-orders").hasRole(CUSTOMER);
     }
 
     private void configureAdminEndpoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.POST,"/product/create").hasRole(ADMIN)
-                .requestMatchers(HttpMethod.GET,"/customer/all-customers").hasRole(ADMIN)
-                .requestMatchers(HttpMethod.GET, "/product/get-all").hasRole(ADMIN);
+                .requestMatchers(HttpMethod.GET,"/customer/all-customers").hasRole(ADMIN);
+
 
     }
 

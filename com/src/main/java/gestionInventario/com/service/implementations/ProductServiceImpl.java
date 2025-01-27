@@ -26,7 +26,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @Transactional
-    public void createProduct(String name, Double price, Integer stock, String description, Category category) throws IOException {
+    public void createProduct(String name, Double price, Integer stock, String description) throws IOException {
         // Guardamos la imagen en un directorio local
 //        String imagePath = "C:/Users/msi" +
 //                "/Downloads/Proyecto-e-commerce" +
@@ -41,7 +41,6 @@ public class ProductServiceImpl implements IProductService {
                 .price(price)
                 .stock(stock)
                 .description(description)
-                .category(category)  // Usamos String o Enum según lo necesites
                 //.urlImage(imagePath)  // Almacenamos la ruta de la imagen
                 .build();
 

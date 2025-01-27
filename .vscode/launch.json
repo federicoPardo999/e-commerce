@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ComApplication<com>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "gestionInventario.com.ComApplication",
+            "projectName": "com",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

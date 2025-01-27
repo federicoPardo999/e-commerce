@@ -1,7 +1,6 @@
 package gestionInventario.com.controller;
 
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
-import gestionInventario.com.model.enumerator.product.Category;
 import gestionInventario.com.service.interfaces.IProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,11 +22,11 @@ public class productController {
     public ResponseEntity<?> create(@RequestParam("name") String name,
                                     @RequestParam("price") Double price,
                                     @RequestParam("stock") Integer stock,
-                                    @RequestParam("description") String description,
-                                    @RequestParam("category") Category category) {
+                                    @RequestParam("description") String description
+                                    /*@RequestParam("category") Category category*/) {
         try {
             // Llamamos al servicio con los parámetros recibidos
-            productService.createProduct(name, price, stock, description, category);
+            productService.createProduct(name, price, stock, description);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

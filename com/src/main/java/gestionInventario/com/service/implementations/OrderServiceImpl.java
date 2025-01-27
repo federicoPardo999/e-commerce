@@ -27,7 +27,7 @@ public class OrderServiceImpl implements IOrderService {
     IPurchaseRepository purchaseRepository;
     IUserRepository customerRepository;
     IOrderRepository orderRepository;
-    NotificationService notificationService;
+    //NotificationService notificationService;
 
     @Override
     @Transactional
