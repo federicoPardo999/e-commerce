@@ -1,6 +1,5 @@
 package gestionInventario.com.controller;
 
-import gestionInventario.com.controller.contextUser.GetUser;
 import gestionInventario.com.model.dto.purchasedProduct.BuyDeleteDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchaseRequestDTO;
 
@@ -19,7 +18,7 @@ import static gestionInventario.com.controller.contextUser.GetUser.getUserFromTo
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class PurchaseController {
+public class CartController {
     IPurchaseService purchaseService;
 
     @PostMapping("/add")
@@ -29,7 +28,7 @@ public class PurchaseController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-cart")
+    @GetMapping("")
     public ResponseEntity<?> getBuyCartResponse() {
         UserEntity user = getUserFromToken();
         return ResponseEntity.ok(purchaseService.getCartFromUser(user.getId()));

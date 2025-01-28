@@ -101,6 +101,12 @@ public class PurchaseServiceImpl implements IPurchaseService {
         purchasedProductRepository.save(purchase);
     }
 
+    private UserEntity findCustomer(Long idCustomer) {
+        return userRepository.findById(idCustomer)
+                .orElseThrow(() -> new NotFoundException("EL EL ERROR ES EN EL SERVICE " +
+                        " PURCHASE EN EL METODO : 'findCustomer'"));
+    }
+
     private Product findProduct(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("product not founded"));
@@ -109,11 +115,6 @@ public class PurchaseServiceImpl implements IPurchaseService {
     private void validateStock(Integer stock, Integer quantityBuyStock) {
         if (stock - quantityBuyStock < 0)
             throw new StockException("quantity to be purchased cannot exceed the available stock");
-    }
-
-    private UserEntity findCustomer(Long idCustomer) {
-        return userRepository.findById(idCustomer)
-                .orElseThrow(() -> new NotFoundException("customer not founded"));
     }
 
 }
