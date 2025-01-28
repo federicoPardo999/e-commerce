@@ -29,11 +29,11 @@ public class PurchaseServiceImpl implements IPurchaseService {
     IPurchaseRepository purchasedProductRepository;
 
     @Override
-    public void startPurchase(PurchaseRequestDTO cartItemDTO) {
+    public void startPurchase(PurchaseRequestDTO cartItemDTO,Long customerId) {
 
         Product product = findProduct(cartItemDTO.getProductId());
 
-        UserEntity customer = findCustomer(cartItemDTO.getCustomerId());
+        UserEntity customer = findCustomer(customerId);
 
         validateStock(product.getStock(), cartItemDTO.getQuantityBuyStock());
 
@@ -78,21 +78,22 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     @Transactional
     @Override
-    public void updateStock(PurchaseRequestDTO purchaseRequestDTO) {
+    public void updateStock(PurchaseRequestDTO purchaseRequestDTO,  Long customerId) {
         PurchasedProduct purchaseProduct = purchasedProductRepository.findPurchasedProduct(
-                purchaseRequestDTO.getCustomerId(),
+                customerId,
                 purchaseRequestDTO.getProductId());
 
         purchaseProduct.setQuantity(purchaseRequestDTO.getQuantityBuyStock());
 
-        updatePricePurchase(purchaseProduct, purchaseRequestDTO);
+        updatePricePurchase(purchaseProduct, purchaseRequestDTO,customerId);
 
     }
 
-    private void updatePricePurchase(PurchasedProduct purchase, PurchaseRequestDTO purchaseRequestDTO) {
+    private void updatePricePurchase(PurchasedProduct purchase, PurchaseRequestDTO purchaseRequestDTO
+    ,Long customerId) {
 
         Double purchasePrice = purchasedProductRepository.findTotalSpentOfIndividualBuy(
-                purchaseRequestDTO.getCustomerId(),
+                customerId,
                 purchaseRequestDTO.getProductId(),
                 PurchaseStatus.IN_PROGRESS);
 

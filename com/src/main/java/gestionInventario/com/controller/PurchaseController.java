@@ -1,5 +1,6 @@
 package gestionInventario.com.controller;
 
+import gestionInventario.com.controller.contextUser.GetUser;
 import gestionInventario.com.model.dto.purchasedProduct.BuyDeleteDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchaseRequestDTO;
 
@@ -15,16 +16,16 @@ import org.springframework.web.bind.annotation.*;
 import static gestionInventario.com.controller.contextUser.GetUser.getUserFromToken;
 
 @RestController
-@RequestMapping("/purchase")
+@RequestMapping("/cart")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class PurchaseController {
     IPurchaseService purchaseService;
 
-    @PostMapping("/create")
+    @PostMapping("/add")
     public ResponseEntity<?> create(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
-        assignIdUser(purchaseRequestDTO);
-        purchaseService.startPurchase(purchaseRequestDTO);
+        UserEntity user = getUserFromToken();
+        purchaseService.startPurchase(purchaseRequestDTO, user.getId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -36,8 +37,8 @@ public class PurchaseController {
 
     @PatchMapping("/update-stock")
     public ResponseEntity<?> updateStock(@RequestBody PurchaseRequestDTO purchaseRequestDTO){
-        assignIdUser(purchaseRequestDTO);
-        purchaseService.updateStock(purchaseRequestDTO);
+        UserEntity user = getUserFromToken();
+        purchaseService.updateStock(purchaseRequestDTO,user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -49,9 +50,5 @@ public class PurchaseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void assignIdUser(PurchaseRequestDTO purchaseRequestDTO) {
-        UserEntity user = getUserFromToken();
-        purchaseRequestDTO.setCustomerId(user.getId());
-    }
 
 }

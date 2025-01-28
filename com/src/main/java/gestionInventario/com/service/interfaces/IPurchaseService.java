@@ -6,12 +6,12 @@ import gestionInventario.com.model.dto.purchasedProduct.PurchaseRequestDTO;
 
 public interface IPurchaseService {
 
-    void startPurchase(PurchaseRequestDTO saleRequestDTO);
+    void startPurchase(PurchaseRequestDTO saleRequestDTO, Long customerId);
 
-    PurchasedProductResponseDTO getCartFromUser(Long idCustomer);
+    PurchasedProductResponseDTO getCartFromUser(Long customerId);
 
     void cancelPurchased(BuyDeleteDTO buyDeleteDTO);
 
-    void updateStock(PurchaseRequestDTO purchaseRequestDTO);
+    void updateStock(PurchaseRequestDTO purchaseRequestDTO, Long customerId);
 
 }

@@ -12,5 +12,4 @@ import lombok.experimental.FieldDefaults;
 public class PurchaseRequestDTO {
     Integer quantityBuyStock;
     Long productId;
-    Long customerId;
 }

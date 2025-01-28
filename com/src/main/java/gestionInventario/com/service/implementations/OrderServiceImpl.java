@@ -27,7 +27,7 @@ public class OrderServiceImpl implements IOrderService {
     IPurchaseRepository purchaseRepository;
     IUserRepository customerRepository;
     IOrderRepository orderRepository;
-    //NotificationService notificationService;
+    NotificationService notificationService;
 
     @Override
     @Transactional
@@ -49,8 +49,9 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
 
         orderRepository.save(order);
-//        notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
-//                "Pedido realizado con exito muchas gracias "+customer.getUsername());
+        notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
+               "Your order has been successfully placed. Thank you very much",
+                customer.getUsername());
 
     }
 

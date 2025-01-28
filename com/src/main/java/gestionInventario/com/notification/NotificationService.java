@@ -2,24 +2,37 @@ package gestionInventario.com.notification;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.SimpleMailMessage;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@RequiredArgsConstructor
 public class NotificationService {
+    JavaMailSender mailSender;
 
-    @Autowired
-    private JavaMailSender mailSender;
-
-    public void sendWelcomeEmail(String to, String subject) {
-
+    public void sendWelcomeEmail(String to, String subject, String userName) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        String htmlContent = """
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(getContentEmail(userName), true);
+            mailSender.send(mimeMessage);
+        }catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private String getContentEmail(String userName){
+        return
+            """
             <!DOCTYPE html>
             <html lang="es">
             <head>
@@ -28,23 +41,15 @@ public class NotificationService {
                 <title>Mensaje</title>
             </head>
             <body style="font-family: Arial, sans-serif; text-align: center;">
-                <h1 style="color: #4CAF50;">¡Operación exitosa!</h1>
-                <p>El pedido se ha realizado con exito.</p>
+                <h1 style="color: #4CAF50;">¡Operación exitosa! /h1>"""+
+                """
+                <p>"""+userName+"""
+                El pedido se ha realizado con exito.</p>
                 <button style="background: #4CAF50; color: white; padding: 10px; border: none; border-radius: 5px;">
                     Volver al catálogo
                 </button>
             </body>
             </html>
             """;
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true); // El segundo parámetro indica que el contenido es HTML
-            mailSender.send(mimeMessage);
-        }catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }

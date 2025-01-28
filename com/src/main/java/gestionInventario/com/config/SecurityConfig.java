@@ -81,10 +81,10 @@ public class SecurityConfig {
 
     private void configureCustomerEndPoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
-                .requestMatchers(HttpMethod.POST,"/purchase/create").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.PATCH,"/purchase/update-stock").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.PATCH,"/purchase/delete").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.GET,"/purchase/get-cart").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.POST,"/cart/add").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.PATCH,"/cart/update-stock").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.PATCH,"/cart/delete").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.GET,"/cart/get-cart").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.POST,"/order/create").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET, "/product/get-all").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.GET,"/order/get-orders").hasRole(CUSTOMER);
