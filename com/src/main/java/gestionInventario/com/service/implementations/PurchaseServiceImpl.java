@@ -76,7 +76,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         purchasedProductRepository.save(purchasedProduct);
     }
 
-    @Transactional
+    @Transactional()
     @Override
     public void updateStock(PurchaseRequestDTO purchaseRequestDTO,  Long customerId) {
         PurchasedProduct purchaseProduct = purchasedProductRepository.findPurchasedProduct(

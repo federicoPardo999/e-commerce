@@ -58,6 +58,9 @@ public class AuthImplService implements IAuthService {
 
         userRepository.save(user);
 
+//        notificationService.sendWelcomeEmail(userToRegisterDto.getMail(),
+//                "Bienvenido a la pagina web -commerce", userToRegisterDto.getUsername());
+
         return LoginResponseDTO.builder()
                 .username(userToRegisterDto.getUsername())
                 .token(jwtService.getToken(user))

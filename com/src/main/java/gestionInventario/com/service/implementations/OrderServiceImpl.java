@@ -6,7 +6,6 @@ import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.OrderEntity;
 import gestionInventario.com.model.enumerator.cart.PurchaseStatus;
-import gestionInventario.com.notification.NotificationService;
 import gestionInventario.com.repository.IPurchaseRepository;
 import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IOrderRepository;
@@ -27,7 +26,6 @@ public class OrderServiceImpl implements IOrderService {
     IPurchaseRepository purchaseRepository;
     IUserRepository customerRepository;
     IOrderRepository orderRepository;
-    NotificationService notificationService;
 
     @Override
     @Transactional
@@ -49,9 +47,7 @@ public class OrderServiceImpl implements IOrderService {
                 .build();
 
         orderRepository.save(order);
-        notificationService.sendWelcomeEmail("pardofede04@gmail.com,",
-               "Your order has been successfully placed. Thank you very much",
-                customer.getUsername());
+
 
     }
 
