@@ -4,7 +4,7 @@ import gestionInventario.com.config.jwt.JwtService;
 import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.exception.RegisterException;
 import gestionInventario.com.model.dto.auth.LoginRequestDTO;
-import gestionInventario.com.model.dto.auth.LoginResponseDTO;
+import gestionInventario.com.model.dto.auth.AuthResponseDTO;
 import gestionInventario.com.model.dto.auth.RegisterRequestDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.repository.IUserRepository;
@@ -27,7 +27,7 @@ public class AuthImplService implements IAuthService {
     AuthenticationManager authenticationManager;
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO userDto) {
+    public AuthResponseDTO login(LoginRequestDTO userDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDto.getUsername(),
                 userDto.getPassword()));
 
@@ -35,7 +35,7 @@ public class AuthImplService implements IAuthService {
                 () -> new NotFoundException("user with the name: "+userDto.getUsername()+ " not exists")
         );
 
-        return LoginResponseDTO.builder()
+        return AuthResponseDTO.builder()
                 .username(userDto.getUsername())
                 .token(jwtService.getToken(user))
                 .role(user.getRole())
@@ -43,9 +43,9 @@ public class AuthImplService implements IAuthService {
     }
 
     @Override
-    public LoginResponseDTO register(RegisterRequestDTO userToRegisterDto) {
-        if(userRepository.existsByUsername(userToRegisterDto.getUsername())){
-            throw new RegisterException("the user have exists: "+userToRegisterDto.getUsername());
+    public AuthResponseDTO register(RegisterRequestDTO userToRegisterDto) {
+        if (userRepository.existsByUsername(userToRegisterDto.getUsername())) {
+            throw new RegisterException("the user have exists: " + userToRegisterDto.getUsername());
         }
 
         UserEntity user = UserEntity.builder()
@@ -58,10 +58,7 @@ public class AuthImplService implements IAuthService {
 
         userRepository.save(user);
 
-//        notificationService.sendWelcomeEmail(userToRegisterDto.getMail(),
-//                "Bienvenido a la pagina web -commerce", userToRegisterDto.getUsername());
-
-        return LoginResponseDTO.builder()
+        return AuthResponseDTO.builder()
                 .username(userToRegisterDto.getUsername())
                 .token(jwtService.getToken(user))
                 .role(userToRegisterDto.getRole())

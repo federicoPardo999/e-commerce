@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginResponseDTO {
+public class AuthResponseDTO {
      String username;
      String token;
      Role role;

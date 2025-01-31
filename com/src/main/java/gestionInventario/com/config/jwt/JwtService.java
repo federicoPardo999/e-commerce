@@ -35,6 +35,8 @@ public class JwtService {
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+
+        System.out.println("secret_key: "+SECRET_KEY);
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
@@ -45,6 +47,8 @@ public class JwtService {
     }
 
     private Key getKey() {
+        System.out.println("secret_key: "+SECRET_KEY);
+
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
