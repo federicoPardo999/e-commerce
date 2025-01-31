@@ -1,7 +1,6 @@
 package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.NotFoundException;
-import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.OrderEntity;
@@ -33,7 +32,7 @@ public class OrderServiceImpl implements IOrderService {
         UserEntity customer = customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new NotFoundException("Customer with id: "+idCustomer+ ", not found"));
 
-        purchaseRepository.doPurchase(idCustomer);
+        purchaseRepository.finishPurchase(idCustomer);
         Double orderPrice = purchaseRepository.findTotalAmountCart(idCustomer);
         Integer quantity = purchaseRepository.findTotalQuantityToBuy(idCustomer);
 
@@ -48,22 +47,14 @@ public class OrderServiceImpl implements IOrderService {
 
         orderRepository.save(order);
 
-
     }
 
     @Override
-    public PurchasedProductResponseDTO getOrderHistory(Long idCustomer) {
-        List<PurchasedProductDTO> products = purchaseRepository.findProductsByCustomer(idCustomer, PurchaseStatus.FINISHED);
-
+    public List<PurchasedProductDTO> getOrderHistory(Long idCustomer) {
         UserEntity customer = customerRepository.findById(idCustomer).orElseThrow(()->
                 new NotFoundException("don't founded customer with id: "+idCustomer));
-        Double totalSpent = purchaseRepository.findTotalSpentOfCartBuy(idCustomer, PurchaseStatus.FINISHED);
 
-        return PurchasedProductResponseDTO.builder()
-                .nameCustomer(customer.getUsername())
-                .products(products)
-                .totalSpent(totalSpent)
-                .build();
+        return purchaseRepository.findProductsByCustomer(idCustomer, PurchaseStatus.FINISHED);
+
     }
-
 }

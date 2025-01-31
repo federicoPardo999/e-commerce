@@ -48,7 +48,7 @@ public interface IPurchaseRepository extends JpaRepository<PurchasedProduct, Pur
     @Modifying
     @Query("UPDATE PurchasedProduct pp SET pp.purchaseStatus = 'FINISHED' " +
             "WHERE pp.purchaseStatus = 'IN_PROGRESS' AND pp.userEntity.id = :idCustomer")
-    void doPurchase(Long idCustomer);
+    void finishPurchase(Long idCustomer);
 
     @Query("SELECT sum(pp.priceTotal) FROM PurchasedProduct pp WHERE pp.userEntity.id = :idCustomer AND pp.purchaseStatus = 'IN_PROGRESS'")
     Double findTotalAmountCart(@Param("idCustomer") Long idCustomer);

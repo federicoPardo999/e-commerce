@@ -22,6 +22,7 @@ public class OrderController {
     public ResponseEntity<?> create(){
         UserEntity user = getUserFromToken();
         orderService.createOrder(user.getId());
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

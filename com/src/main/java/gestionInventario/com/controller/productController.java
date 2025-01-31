@@ -1,6 +1,7 @@
 package gestionInventario.com.controller;
 
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
+import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.service.interfaces.IProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -33,17 +34,16 @@ public class productController {
         }
     }
 
-    @GetMapping("/get-most-expensive")
-    public ResponseEntity<List<ProductResponseDTO>> getMostExpensivesProduct() {
-        return ResponseEntity.ok(productService.getMostExpensiveProduct());
+    @PatchMapping("/update-stock")
+    public  ResponseEntity<?> updateStock(@RequestBody List<PurchasedProductDTO> purchasedProductsDTO){
+        productService.updateStockOfProducts(purchasedProductsDTO);
+        return  new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     @GetMapping("get-all")
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
-
 
     @GetMapping("get-by-category/{category}")
     public ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable String category) {
