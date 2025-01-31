@@ -5,7 +5,6 @@ import gestionInventario.com.mapper.product.ProductMapper;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.Product;
-import gestionInventario.com.model.enumerator.product.Category;
 import gestionInventario.com.repository.IProductRepository;
 import gestionInventario.com.service.interfaces.IProductService;
 import jakarta.transaction.Transactional;
@@ -13,9 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
