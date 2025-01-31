@@ -2,7 +2,9 @@ package gestionInventario.com.config;
 
 
 import gestionInventario.com.config.jwt.JwtAuthenticationFilter;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,12 +29,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
+    JwtAuthenticationFilter jwtAuthenticationFilter;
+    AuthenticationProvider authenticationProvider;
 
-    private static final String ADMIN = Role.ADMIN.toString();
-    private static final String CUSTOMER = Role.CUSTOMER.toString();
+    static String ADMIN = Role.ADMIN.toString();
+    static String CUSTOMER = Role.CUSTOMER.toString();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
