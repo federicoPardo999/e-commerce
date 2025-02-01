@@ -1,7 +1,9 @@
 package gestionInventario.com.service.implementations;
 
+import gestionInventario.com.config.cloudinary.CloudinaryService;
 import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.mapper.product.ProductMapper;
+import gestionInventario.com.model.dto.product.ProductRequestDTO;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.Product;
@@ -11,7 +13,9 @@ import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,28 +26,23 @@ import java.util.List;
 public class ProductServiceImpl implements IProductService {
     IProductRepository productRepository;
     ProductMapper productMapper;
+    CloudinaryService cloudinaryService;
 
     @Override
     @Transactional
-    public void createProduct(String name, Double price, Integer stock, String description) throws IOException {
-        // Guardamos la imagen en un directorio local
-//        String imagePath = "C:/Users/msi" +
-//                "/Downloads/Proyecto-e-commerce" +
-//                "/Back-end/gestionInventario" +
-//                "/com/src/main/java/gestionInventario/com/images" + image.getOriginalFilename();
+    public void createProduct(ProductRequestDTO productRequestDTO, MultipartFile image) throws IOException {
+            String urlImage = cloudinaryService.uploadImage(image) ;
 
-        //image.transferTo(new File(imagePath));  // Guardamos el archivo en el directorio
+            Product product = Product.builder()
+                    .name(productRequestDTO.getName())
+                    .price(productRequestDTO.getPrice())
+                    .stock(productRequestDTO.getStock())
+                    .description(productRequestDTO.getDescription())
+                    .urlImage(urlImage)
+                    .build();
 
-        // Creamos el producto con la imagen guardada
-        Product product = Product.builder()
-                .name(name)
-                .price(price)
-                .stock(stock)
-                .description(description)
-                //.urlImage(imagePath)  // Almacenamos la ruta de la imagen
-                .build();
+            productRepository.save(product);
 
-        productRepository.save(product);
     }
 
     @Override

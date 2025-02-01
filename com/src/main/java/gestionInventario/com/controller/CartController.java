@@ -21,6 +21,12 @@ import static gestionInventario.com.controller.contextUser.GetUser.getUserFromTo
 public class CartController {
     IPurchaseService purchaseService;
 
+    @GetMapping("")
+    public ResponseEntity<?> getBuyCartResponse() {
+        UserEntity user = getUserFromToken();
+        return ResponseEntity.ok(purchaseService.getCartFromUser(user.getId()));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> create(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
         UserEntity user = getUserFromToken();
@@ -28,16 +34,10 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> getBuyCartResponse() {
-        UserEntity user = getUserFromToken();
-        return ResponseEntity.ok(purchaseService.getCartFromUser(user.getId()));
-    }
-
     @PatchMapping("/update-stock")
-    public ResponseEntity<?> updateStock(@RequestBody PurchaseRequestDTO purchaseRequestDTO){
+    public ResponseEntity<?> updateStock(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
         UserEntity user = getUserFromToken();
-        purchaseService.updateStock(purchaseRequestDTO,user.getId());
+        purchaseService.updateStock(purchaseRequestDTO, user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -48,6 +48,5 @@ public class CartController {
         purchaseService.cancelPurchased(buyDeleteDTO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 }

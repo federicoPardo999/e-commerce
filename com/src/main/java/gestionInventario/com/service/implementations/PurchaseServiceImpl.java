@@ -55,11 +55,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     public PurchasedProductResponseDTO getCartFromUser(Long idCustomer) {
         List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, PurchaseStatus.IN_PROGRESS);
-        UserEntity customer = findCustomer(idCustomer);
         Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, PurchaseStatus.IN_PROGRESS);
 
         return PurchasedProductResponseDTO.builder()
-                .nameCustomer(customer.getUsername())
                 .products(products)
                 .totalSpent(totalSpent)
                 .build();

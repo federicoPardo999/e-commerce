@@ -1,6 +1,7 @@
 package gestionInventario.com.service.interfaces;
 
 
+import gestionInventario.com.model.dto.product.ProductRequestDTO;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.enumerator.product.Category;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
-     void createProduct(String name, Double price, Integer stock, String description) throws IOException;
+     void createProduct(ProductRequestDTO productRequestDTO, MultipartFile image) throws IOException;
      List<ProductResponseDTO> getMostExpensiveProduct();
 
      List<ProductResponseDTO> getAllProducts();

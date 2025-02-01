@@ -1,5 +1,6 @@
 package gestionInventario.com.controller;
 
+import gestionInventario.com.model.dto.product.ProductRequestDTO;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.service.interfaces.IProductService;
@@ -7,10 +8,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/product")
@@ -19,18 +24,14 @@ import java.util.List;
 public class productController {
     IProductService productService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestParam("name") String name,
-                                    @RequestParam("price") Double price,
-                                    @RequestParam("stock") Integer stock,
-                                    @RequestParam("description") String description
-                                    /*@RequestParam("category") Category category*/) {
+    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> create(@ModelAttribute ProductRequestDTO productRequestDTO,
+            @RequestPart("image")MultipartFile image) {
         try {
-            // Llamamos al servicio con los parámetros recibidos
-            productService.createProduct(name, price, stock, description);
+            productService.createProduct(productRequestDTO,image);
             return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 

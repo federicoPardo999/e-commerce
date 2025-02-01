@@ -24,7 +24,7 @@ public class Product {
     Integer stock;
     String description;
 
-    //String urlImage;
+    String urlImage;
 
     @Enumerated(EnumType.STRING)
     Category category;

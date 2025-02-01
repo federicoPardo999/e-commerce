@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB       # Tamaño máximo por archivo
+      max-request-size: 10MB    # Tamaño máximo total de la solicitud
   mail:
     host: smtp.gmail.com
     port: 587

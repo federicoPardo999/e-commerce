@@ -27,7 +27,7 @@ public interface IPurchaseRepository extends JpaRepository<PurchasedProduct, Pur
     List<PurchasedProduct> findCartsInProgress(@Param("idCustomer") Long idCustomer);
 
     @Query("SELECT new  gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO" +
-            "(p.id, p.name, p.price, pp.quantity,p.price * pp.quantity) " +
+            "(pp.id,p.id, p.name, p.price, pp.quantity,p.price * pp.quantity,p.urlImage) " +
             "FROM Product p JOIN p.purchasedProducts pp " +
             "WHERE pp.userEntity.id = :idCustomer AND pp.purchaseStatus = :purchaseStatus")
     List<PurchasedProductDTO> findProductsByCustomer(@Param("idCustomer") Long idCustomer,

@@ -13,5 +13,4 @@ public class ProductRequestDTO {
     Double price;
     Integer stock;
     String description;
-
 }
