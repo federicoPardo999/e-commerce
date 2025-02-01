@@ -7,10 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +32,6 @@ public class JwtService {
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {
-
-        System.out.println("secret_key: "+SECRET_KEY);
         return Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
@@ -47,8 +42,6 @@ public class JwtService {
     }
 
     private Key getKey() {
-        System.out.println("secret_key: "+SECRET_KEY);
-
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
