@@ -77,7 +77,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/order/create").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET, "/product/get-all").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.POST, "/email/welcome").hasAnyRole(CUSTOMER,ADMIN)
-
+                .requestMatchers(HttpMethod.PATCH, "/product/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET,"/order/get-orders").hasRole(CUSTOMER);
     }
 
