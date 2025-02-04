@@ -1,10 +1,10 @@
 package gestionInventario.com.controller;
 
 import gestionInventario.com.model.dto.purchasedProduct.BuyDeleteDTO;
-import gestionInventario.com.model.dto.purchasedProduct.PurchaseRequestDTO;
+import gestionInventario.com.model.dto.purchasedProduct.CartItemRequestDTO;
 
 import gestionInventario.com.model.entity.UserEntity;
-import gestionInventario.com.service.interfaces.IPurchaseService;
+import gestionInventario.com.service.interfaces.ICartService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +19,7 @@ import static gestionInventario.com.controller.contextUser.GetUser.getUserFromTo
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class CartController {
-    IPurchaseService purchaseService;
+    ICartService purchaseService;
 
     @GetMapping("")
     public ResponseEntity<?> getBuyCartResponse() {
@@ -28,16 +28,16 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> create(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
+    public ResponseEntity<?> create(@RequestBody CartItemRequestDTO cartItemRequestDTO) {
         UserEntity user = getUserFromToken();
-        purchaseService.startPurchase(purchaseRequestDTO, user.getId());
+        purchaseService.startPurchase(cartItemRequestDTO, user.getId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/update-stock")
-    public ResponseEntity<?> updateStock(@RequestBody PurchaseRequestDTO purchaseRequestDTO) {
+    public ResponseEntity<?> updateStock(@RequestBody CartItemRequestDTO cartItemRequestDTO) {
         UserEntity user = getUserFromToken();
-        purchaseService.updateStock(purchaseRequestDTO, user.getId());
+        purchaseService.updateStock(cartItemRequestDTO, user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

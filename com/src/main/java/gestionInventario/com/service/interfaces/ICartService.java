@@ -2,16 +2,16 @@ package gestionInventario.com.service.interfaces;
 
 import gestionInventario.com.model.dto.purchasedProduct.BuyDeleteDTO;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductResponseDTO;
-import gestionInventario.com.model.dto.purchasedProduct.PurchaseRequestDTO;
+import gestionInventario.com.model.dto.purchasedProduct.CartItemRequestDTO;
 
-public interface IPurchaseService {
+public interface ICartService {
 
-    void startPurchase(PurchaseRequestDTO saleRequestDTO, Long customerId);
+    void addCartItem(CartItemRequestDTO cartItemRequestDTO, Long customerId);
 
     PurchasedProductResponseDTO getCartFromUser(Long customerId);
 
     void cancelPurchased(BuyDeleteDTO buyDeleteDTO);
 
-    void updateStock(PurchaseRequestDTO purchaseRequestDTO, Long customerId);
+    void updateStock(CartItemRequestDTO cartItemRequestDTO, Long customerId);
 
 }

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -27,21 +28,19 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "username")
-    String username;
-
-    @Column(name = "password")
-    String password;
-
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "role")
     Role role;
 
-    String mail;
-    String address;
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    Set<Cart> carts;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
-    List<PurchasedProduct> purchasedProducts;
+    Set<OrderEntity> orders;
+
+    String username;
+    String password;
+    String mail;
+    String address;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

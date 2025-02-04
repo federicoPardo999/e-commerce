@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -19,18 +19,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Enumerated(EnumType.STRING)
+    Category category;
+
     String name;
     Double price;
     Integer stock;
     String description;
-
     String urlImage;
-
-    @Enumerated(EnumType.STRING)
-    Category category;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    List<PurchasedProduct> purchasedProducts;
 
     public void decreaseStock(Integer stockDecrease){this.stock-=stockDecrease;}
 

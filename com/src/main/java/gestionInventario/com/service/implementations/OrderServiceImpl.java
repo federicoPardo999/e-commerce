@@ -4,7 +4,7 @@ import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.OrderEntity;
-import gestionInventario.com.model.enumerator.cart.PurchaseStatus;
+import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.repository.IPurchaseRepository;
 import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IOrderRepository;
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements IOrderService {
         UserEntity customer = customerRepository.findById(idCustomer).orElseThrow(()->
                 new NotFoundException("don't founded customer with id: "+idCustomer));
 
-        return purchaseRepository.findProductsByCustomer(idCustomer, PurchaseStatus.FINISHED);
+        return purchaseRepository.findProductsByCustomer(idCustomer, CartStatus.FINISHED);
 
     }
 }

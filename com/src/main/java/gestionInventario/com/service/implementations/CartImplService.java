@@ -4,13 +4,13 @@ import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.exception.StockException;
 import gestionInventario.com.model.dto.purchasedProduct.*;
 import gestionInventario.com.model.entity.UserEntity;
-import gestionInventario.com.model.entity.PurchasedProduct;
+import gestionInventario.com.model.entity.Cart;
 import gestionInventario.com.model.entity.Product;
-import gestionInventario.com.model.enumerator.cart.PurchaseStatus;
+import gestionInventario.com.model.enumerator.cart.CartStatus;
 import gestionInventario.com.repository.IPurchaseRepository;
 import gestionInventario.com.repository.IUserRepository;
 import gestionInventario.com.repository.IProductRepository;
-import gestionInventario.com.service.interfaces.IPurchaseService;
+import gestionInventario.com.service.interfaces.ICartService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,40 +22,36 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PurchaseServiceImpl implements IPurchaseService {
+public class CartImplService implements ICartService {
 
     IProductRepository productRepository;
     IUserRepository userRepository;
     IPurchaseRepository purchasedProductRepository;
 
     @Override
-    public void startPurchase(PurchaseRequestDTO cartItemDTO,Long customerId) {
+    public void addCartItem(CartItemRequestDTO cartItemRequestDTO, Long customerId) {
 
-        Product product = findProduct(cartItemDTO.getProductId());
+        Product product = findProduct(cartItemRequestDTO.getProductId());
 
         UserEntity customer = findCustomer(customerId);
 
-        validateStock(product.getStock(), cartItemDTO.getQuantityBuyStock());
+        validateStock(product.getStock(), cartItemRequestDTO.getQuantityBuyStock());
 
-        Double purchasePrice = product.getPrice() * cartItemDTO.getQuantityBuyStock();
+        Double purchasePrice = product.getPrice() * cartItemRequestDTO.getQuantityBuyStock();
 
-        PurchasedProduct purchasedProduct = PurchasedProduct
+        Cart cart = Cart
                 .builder()
-                .product(product)
-                .priceTotal(purchasePrice)
-                .quantity(cartItemDTO.getQuantityBuyStock())
-                .product(product)
                 .userEntity(customer)
-                .purchaseStatus(PurchaseStatus.IN_PROGRESS)
+                .cartStatus(CartStatus.ACTIVE)
                 .build();
 
-        purchasedProductRepository.save(purchasedProduct);
+        purchasedProductRepository.save(cart);
     }
 
     @Override
     public PurchasedProductResponseDTO getCartFromUser(Long idCustomer) {
-        List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, PurchaseStatus.IN_PROGRESS);
-        Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, PurchaseStatus.IN_PROGRESS);
+        List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
+        Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, CartStatus.IN_PROGRESS);
 
         return PurchasedProductResponseDTO.builder()
                 .products(products)
@@ -66,34 +62,34 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     @Transactional
     public void cancelPurchased(BuyDeleteDTO buyDeleteDTO) {
-        PurchasedProduct purchasedProduct = purchasedProductRepository.findPurchasedProduct(
+        Cart cart = purchasedProductRepository.findPurchasedProduct(
                 buyDeleteDTO.getIdCustomer(), buyDeleteDTO.getIdProduct()
         );
-        purchasedProduct.setPurchaseStatus(PurchaseStatus.CANCELED);
+        cart.setCartStatus(CartStatus.CANCELED);
 
-        purchasedProductRepository.save(purchasedProduct);
+        purchasedProductRepository.save(cart);
     }
 
-    @Transactional()
+    @Transactional
     @Override
-    public void updateStock(PurchaseRequestDTO purchaseRequestDTO,  Long customerId) {
-        PurchasedProduct purchaseProduct = purchasedProductRepository.findPurchasedProduct(
+    public void updateStock(CartItemRequestDTO cartItemRequestDTO, Long customerId) {
+        Cart purchaseProduct = purchasedProductRepository.findPurchasedProduct(
                 customerId,
-                purchaseRequestDTO.getProductId());
+                cartItemRequestDTO.getProductId());
 
-        purchaseProduct.setQuantity(purchaseRequestDTO.getQuantityBuyStock());
+        purchaseProduct.setQuantity(cartItemRequestDTO.getQuantityBuyStock());
 
-        updatePricePurchase(purchaseProduct, purchaseRequestDTO,customerId);
+        updatePricePurchase(purchaseProduct, cartItemRequestDTO,customerId);
 
     }
 
-    private void updatePricePurchase(PurchasedProduct purchase, PurchaseRequestDTO purchaseRequestDTO
-    ,Long customerId) {
+    private void updatePricePurchase(Cart purchase, CartItemRequestDTO cartItemRequestDTO
+    , Long customerId) {
 
         Double purchasePrice = purchasedProductRepository.findTotalSpentOfIndividualBuy(
                 customerId,
-                purchaseRequestDTO.getProductId(),
-                PurchaseStatus.IN_PROGRESS);
+                cartItemRequestDTO.getProductId(),
+                CartStatus.IN_PROGRESS);
 
         purchase.setPriceTotal(purchasePrice);
         purchasedProductRepository.save(purchase);

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,11 +25,18 @@ public class OrderEntity {
     @JoinColumn(name = "customer_id")
     UserEntity customer;
 
+    @OneToMany(mappedBy = "OrderEntity",cascade = CascadeType.ALL)
+    Set<OrderItem> ordersItems;
+
     @Column(name = "price_total")
     Double priceTotal;
 
     LocalDate date;
-    String address;
-    Integer quantity;
+
+    // Método helper para agregar items
+    public void addItem(OrderItem item) {
+        ordersItems.add(item);
+        item.setOrderEntity(this);
+    }
 
 }
