@@ -32,4 +32,25 @@ public class AuthController {
         return "hola loco como estas";
     }
 
+    @GetMapping("/hola")
+    public String holaaaa() {
+        return "hola loco como estas";
+    }
+
+    @GetMapping("/hola")
+    public String holaa() {
+        return "hola loco como estas";
+    }
+
+    @GetMapping("/hola")
+    public String holaaa() {
+        return "hola loco como estas";
+    }
+
+
+    @GetMapping("/adios")
+    public String adios() {
+        return "hola loco como estas";
+    }
+
 }
