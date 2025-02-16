@@ -24,5 +24,8 @@ public class OrderItem {
     @Column(name = "price_cart_item")
     Double orderItemPrice;
 
+    Double priceProduct;
+    String productName;
+    String image;
     Integer quantity;
 }

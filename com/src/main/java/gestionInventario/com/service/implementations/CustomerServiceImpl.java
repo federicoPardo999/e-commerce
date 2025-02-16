@@ -17,7 +17,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class CustomerServiceImpl implements ICustomerService {
     IUserRepository customerRepository;
-    CustomerMapper customerMapper;
 
     @Override
     public void createCustomer(UserEntity customer) {

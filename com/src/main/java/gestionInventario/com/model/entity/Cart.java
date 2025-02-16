@@ -20,23 +20,18 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @OneToMany(mappedBy = "Cart", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.PERSIST)
     Set<CartItem> cartItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    UserEntity userEntity;
+    UserEntity user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cart_status")
     CartStatus cartStatus;
 
     @Column(name = "cart_price")
-    Double totalCartPrice;
-
-    public void addItem(CartItem item) {
-        cartItems.add(item);
-        item.setCart(this);
-    }
+    Double cartPrice;
 
 }

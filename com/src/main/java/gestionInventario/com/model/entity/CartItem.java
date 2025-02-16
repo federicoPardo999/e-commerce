@@ -24,16 +24,12 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     Cart cart;
 
-    @Column(name = "price_cart_item")
-    Double cartItemPrice;
+    @Column(name = "price_item")
+    Double priceItem;
 
+    Double priceProduct;
+    String productName;
+    String image;
     Integer quantity;
 
-    @PrePersist
-    @PreUpdate
-    private void setPriceFromProduct() {
-        if (product != null && cartItemPrice == null) {
-            this.cartItemPrice = product.getPrice();
-        }
-    }
 }

@@ -2,7 +2,6 @@ package gestionInventario.com.controller;
 
 import gestionInventario.com.model.dto.product.ProductRequestDTO;
 import gestionInventario.com.model.dto.product.ProductResponseDTO;
-import gestionInventario.com.model.dto.purchasedProduct.PurchasedProductDTO;
 import gestionInventario.com.service.interfaces.IProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +33,12 @@ public class productController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
-    @PatchMapping("/update-stock")
-    public  ResponseEntity<?> updateStock(@RequestBody List<PurchasedProductDTO> purchasedProductsDTO){
-        productService.updateStockOfProducts(purchasedProductsDTO);
-        return  new ResponseEntity<>(HttpStatus.OK);
-    }
+//
+//    @PatchMapping("/update-stock")
+//    public  ResponseEntity<?> updateStock(@RequestBody List<PurchasedProductDTO> purchasedProductsDTO){
+//        productService.updateStockOfProducts(purchasedProductsDTO);
+//        return  new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     @GetMapping("get-all")
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {

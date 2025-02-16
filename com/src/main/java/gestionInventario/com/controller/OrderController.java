@@ -1,7 +1,7 @@
 package gestionInventario.com.controller;
 
 import gestionInventario.com.model.entity.UserEntity;
-import gestionInventario.com.service.implementations.OrderServiceImpl;
+import gestionInventario.com.service.interfaces.IOrderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,13 +16,12 @@ import static gestionInventario.com.controller.contextUser.GetUser.getUserFromTo
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 @RequiredArgsConstructor
 public class OrderController {
-    OrderServiceImpl orderService;
+    IOrderService orderService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(){
+    @PostMapping("/create/{cartId}")
+    public ResponseEntity<?> create(@PathVariable Long cartId){
         UserEntity user = getUserFromToken();
-        orderService.createOrder(user.getId());
-
+        orderService.createOrder(cartId, user.getId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -33,4 +32,3 @@ public class OrderController {
     }
 
 }
-

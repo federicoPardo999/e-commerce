@@ -3,17 +3,12 @@ package gestionInventario.com.model.dto.purchasedProduct;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PurchasedProductDTO {
-    Long idPurchase;
-    Long idProduct;
-    String name;
-    Double price;
-    Integer stockToBuy;
-    Double pricePurchased;
-    String urlImage;
+public class CartRequestDTO {
+    Long idCustomer;
+    Long idCart;
 }

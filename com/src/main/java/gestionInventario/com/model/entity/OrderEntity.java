@@ -23,20 +23,14 @@ public class OrderEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    UserEntity customer;
+    UserEntity user;
 
-    @OneToMany(mappedBy = "OrderEntity",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     Set<OrderItem> ordersItems;
 
     @Column(name = "price_total")
     Double priceTotal;
 
     LocalDate date;
-
-    // Método helper para agregar items
-    public void addItem(OrderItem item) {
-        ordersItems.add(item);
-        item.setOrderEntity(this);
-    }
 
 }

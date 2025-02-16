@@ -8,8 +8,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartItemRequestDTO {
-    Integer quantityBuyStock;
-    Long productId;
-    Long cartId;
+public class CartItemResponseDTO {
+    Long itemId;
+    String productImage;
+    String nameProduct;
+    Integer quantity;
+    Double priceOriginalProduct;
+    Double priceTotal;
 }

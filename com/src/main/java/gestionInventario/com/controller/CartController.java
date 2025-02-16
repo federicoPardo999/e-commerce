@@ -1,8 +1,8 @@
 package gestionInventario.com.controller;
 
-import gestionInventario.com.model.dto.purchasedProduct.BuyDeleteDTO;
 import gestionInventario.com.model.dto.purchasedProduct.CartItemRequestDTO;
 
+import gestionInventario.com.model.dto.purchasedProduct.CartRequestDTO;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.service.interfaces.ICartService;
 import lombok.AccessLevel;
@@ -19,34 +19,19 @@ import static gestionInventario.com.controller.contextUser.GetUser.getUserFromTo
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class CartController {
-    ICartService purchaseService;
-
-    @GetMapping("")
-    public ResponseEntity<?> getBuyCartResponse() {
-        UserEntity user = getUserFromToken();
-        return ResponseEntity.ok(purchaseService.getCartFromUser(user.getId()));
-    }
+    ICartService cartService;
 
     @PostMapping("/add")
     public ResponseEntity<?> create(@RequestBody CartItemRequestDTO cartItemRequestDTO) {
         UserEntity user = getUserFromToken();
-        purchaseService.startPurchase(cartItemRequestDTO, user.getId());
+        cartService.addItemToCart(cartItemRequestDTO, user.getId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PatchMapping("/update-stock")
-    public ResponseEntity<?> updateStock(@RequestBody CartItemRequestDTO cartItemRequestDTO) {
+    @GetMapping("")
+    public ResponseEntity<?> getCart(@RequestBody CartRequestDTO cartRequestDTO) {
         UserEntity user = getUserFromToken();
-        purchaseService.updateStock(cartItemRequestDTO, user.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PatchMapping("/delete")
-    public ResponseEntity<?> deleteCart(@RequestBody BuyDeleteDTO buyDeleteDTO) {
-        UserEntity user = getUserFromToken();
-        buyDeleteDTO.setIdCustomer(user.getId());
-        purchaseService.cancelPurchased(buyDeleteDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(cartService.getCart(cartRequestDTO));
     }
 
 }

@@ -31,10 +31,10 @@ public class UserEntity implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     Role role;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     Set<Cart> carts;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     Set<OrderEntity> orders;
 
     String username;
