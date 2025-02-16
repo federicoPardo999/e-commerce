@@ -30,4 +30,9 @@ public class AuthController {
         return new ResponseEntity<>(authService.register(registerRequestDTO),HttpStatus.CREATED);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity <?> a(@RequestBody RegisterRequestDTO registerRequestDTO){
+        return new ResponseEntity<>(authService.register(registerRequestDTO),HttpStatus.CREATED);
+    }
+    //xdxd
 }
