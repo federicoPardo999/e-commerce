@@ -50,11 +50,14 @@ public class CartImplService implements ICartService{
     }
 
     @Override
-    public CartResponseDTO getCart(CartRequestDTO cartRequestDTO) {
-        Cart cart = cartRepository.findById(cartRequestDTO.getIdCart()).orElseThrow();
-
+    public CartResponseDTO getCart(Long idUser) {
+        //corregir esto
+        Cart cart = cartRepository.findActiveCartByCustomerId(idUser).orElseThrow(
+                () -> new NotFoundException("no hay carrito activo")
+        );
         List <CartItemResponseDTO> items = cartMapper.itemsToCartItemResponseDTO(
-                cartRepository.findItems(cartRequestDTO.getIdCart()));
+                cartRepository.findItems(cart.getId()));
+
 
         return CartResponseDTO.builder()
                 .items(items)

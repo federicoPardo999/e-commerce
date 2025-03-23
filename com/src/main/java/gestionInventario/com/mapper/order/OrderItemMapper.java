@@ -2,21 +2,22 @@ package gestionInventario.com.mapper.order;
 
 import gestionInventario.com.model.dto.order.OrderItemResponseDTO;
 import gestionInventario.com.model.entity.CartItem;
+import gestionInventario.com.model.entity.OrderEntity;
 import gestionInventario.com.model.entity.OrderItem;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class OrderItemMapper {
-    public Set<OrderItem> itemCartsToOrderItems(Set<CartItem> items){
-        return items.stream().map(this::itemCartToOrderItem).collect(Collectors.toSet());
+    public Set<OrderItem> itemCartsToOrderItems(Set<CartItem> items, OrderEntity order){
+        return items.stream().map(cartItem -> itemCartToOrderItem(cartItem,order)).collect(Collectors.toSet());
     }
 
-    private OrderItem itemCartToOrderItem(CartItem cartItem) {
+    private OrderItem itemCartToOrderItem(CartItem cartItem,OrderEntity order) {
         return  OrderItem.builder()
+                .order(order)
                 .productName(cartItem.getProductName())
                 .priceProduct(cartItem.getPriceProduct())
                 .image(cartItem.getImage())
@@ -25,8 +26,8 @@ public class OrderItemMapper {
                 .build();
     }
 
-    public List<OrderItemResponseDTO> orderItemsToResponseDTO(Set<OrderItem> items){
-        return items.stream().map(this::orderItemToResponseDTO).collect(Collectors.toList());
+    public Set<OrderItemResponseDTO> orderItemsToResponseDTO(Set<OrderItem> items){
+        return items.stream().map(this::orderItemToResponseDTO).collect(Collectors.toSet());
     }
 
     private OrderItemResponseDTO orderItemToResponseDTO(OrderItem orderItem) {

@@ -26,31 +26,4 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody RegisterRequestDTO registerRequestDTO) {
         return new ResponseEntity<>(authService.register(registerRequestDTO), HttpStatus.CREATED);
     }
-
-    @GetMapping("/hola")
-    public String hola() {
-        return "hola loco como estas";
-    }
-
-    @GetMapping("/hola")
-    public String holaaaa() {
-        return "hola loco como estas";
-    }
-
-    @GetMapping("/hola")
-    public String holaa() {
-        return "hola loco como estas";
-    }
-
-    @GetMapping("/hola")
-    public String holaaa() {
-        return "hola loco como estas";
-    }
-
-
-    @GetMapping("/adios")
-    public String adios() {
-        return "hola loco como estas";
-    }
-
 }

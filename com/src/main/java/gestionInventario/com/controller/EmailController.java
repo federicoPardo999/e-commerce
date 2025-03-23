@@ -24,5 +24,4 @@ public class EmailController {
         emailService.sendWelcomeMessage(sendWelcomeMessage);
         return new ResponseEntity<>( HttpStatus.CREATED);
     }
-
 }

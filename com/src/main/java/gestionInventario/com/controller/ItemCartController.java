@@ -27,7 +27,7 @@ public class ItemCartController {
     }
 
     @DeleteMapping("delete")
-    public ResponseEntity<?> delete(@RequestBody Long idItem){
+    public ResponseEntity<?> delete(@PathVariable Long idItem){
         UserEntity user = getUserFromToken();
         iCartItemService.deleteItem(idItem );
         return new ResponseEntity<>(HttpStatus.OK);

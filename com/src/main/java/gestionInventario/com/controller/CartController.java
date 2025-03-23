@@ -28,10 +28,10 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> getCart(@RequestBody CartRequestDTO cartRequestDTO) {
+    @GetMapping
+    public ResponseEntity<?> getCart() {
         UserEntity user = getUserFromToken();
-        return ResponseEntity.ok(cartService.getCart(cartRequestDTO));
+        return ResponseEntity.ok(cartService.getCart(user.getId()));
     }
 
 }

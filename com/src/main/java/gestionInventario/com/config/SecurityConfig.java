@@ -29,10 +29,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class SecurityConfig {
-    final JwtAuthenticationFilter jwtAuthenticationFilter;
-    final AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
 
     private final static String ADMIN = Role.ADMIN.toString();
     private final static String CUSTOMER = Role.CUSTOMER.toString();
@@ -78,7 +77,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/email/welcome").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.PATCH, "/product/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.PATCH, "/item/update-stock").hasRole(CUSTOMER)
-
                 .requestMatchers(HttpMethod.GET,"/order/get-orders").hasRole(CUSTOMER);
     }
 
@@ -86,7 +84,6 @@ public class SecurityConfig {
         authRequest
                 .requestMatchers(HttpMethod.POST,"/product/create").hasRole(ADMIN)
                 .requestMatchers(HttpMethod.GET,"/customer/all-customers").hasRole(ADMIN);
-
     }
 
     @Bean

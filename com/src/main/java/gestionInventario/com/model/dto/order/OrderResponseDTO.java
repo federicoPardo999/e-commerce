@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -15,7 +16,7 @@ import java.util.Set;
 public class OrderResponseDTO {
     Long orderId;
     String customerName;
-    Set<OrderItem> orderItems;
+    Set<OrderItemResponseDTO> orderItems;
     LocalDate orderDate;
     Double priceOrder;
 }
