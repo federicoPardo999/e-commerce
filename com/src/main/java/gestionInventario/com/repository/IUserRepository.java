@@ -9,10 +9,5 @@ import java.util.Optional;
 @Repository
 public interface IUserRepository extends JpaRepository<UserEntity,Long> {
     Optional<UserEntity> findByUsername(String username);
-
-//    @Query("SELECT o FROM OrderEntity o WHERE o.role = 'CUSTOMER'")
-//    List<UserEntity> findUsersByRole();
-
-
     Boolean existsByUsername(String username);
 }

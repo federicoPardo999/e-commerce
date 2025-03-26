@@ -2,14 +2,16 @@ package gestionInventario.com.service.implementations;
 
 import gestionInventario.com.exception.NotFoundException;
 import gestionInventario.com.exception.StockException;
+import gestionInventario.com.mapper.mapperItemCart.itemCartMapper;
 import gestionInventario.com.model.dto.purchasedProduct.*;
+import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.entity.UserEntity;
 import gestionInventario.com.model.entity.Cart;
-import gestionInventario.com.model.entity.Product;
 import gestionInventario.com.model.enumerator.cart.CartStatus;
-import gestionInventario.com.repository.IPurchaseRepository;
-import gestionInventario.com.repository.IUserRepository;
+import gestionInventario.com.repository.ICartRepository;
 import gestionInventario.com.repository.IProductRepository;
+import gestionInventario.com.repository.IUserRepository;
+import gestionInventario.com.service.interfaces.ICartItemService;
 import gestionInventario.com.service.interfaces.ICartService;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -18,97 +20,72 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class CartImplService implements ICartService {
-
-    IProductRepository productRepository;
+@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+public class CartImplService implements ICartService{
+    ICartRepository cartRepository;
+    ICartItemService cartItemService;
     IUserRepository userRepository;
-    IPurchaseRepository purchasedProductRepository;
+    IProductRepository productRepository;
+    itemCartMapper cartMapper;
 
     @Override
-    public void addCartItem(CartItemRequestDTO cartItemRequestDTO, Long customerId) {
+    @Transactional
+    public void  addItemToCart(CartItemRequestDTO cartItemRequestDTO,Long customerId) {
+        Cart cart = cartRepository.findActiveCartByCustomerId(customerId)
+                .orElseGet(() -> createNewCart(customerId));
+
 
         Product product = findProduct(cartItemRequestDTO.getProductId());
 
-        UserEntity customer = findCustomer(customerId);
+        validateStock(product.getStock(),cartItemRequestDTO.getQuantityBuyStock());
 
-        validateStock(product.getStock(), cartItemRequestDTO.getQuantityBuyStock());
+        cartItemService.addItem(cartItemRequestDTO, cart.getId());
 
-        Double purchasePrice = product.getPrice() * cartItemRequestDTO.getQuantityBuyStock();
+        cartRepository.save(cart);
+    }
 
-        Cart cart = Cart
-                .builder()
-                .userEntity(customer)
+    @Override
+    public CartResponseDTO getCart(Long idUser) {
+        //corregir esto
+        Cart cart = cartRepository.findActiveCartByCustomerId(idUser).orElseThrow(
+                () -> new NotFoundException("no hay carrito activo")
+        );
+        List <CartItemResponseDTO> items = cartMapper.itemsToCartItemResponseDTO(
+                cartRepository.findItems(cart.getId()));
+
+
+        return CartResponseDTO.builder()
+                .items(items)
+                .priceCart(cart.getCartPrice())
+                .build();
+    }
+
+    private Cart createNewCart(Long customerId) {
+        Cart cart = Cart.builder()
+                .user(findCustomer(customerId))
                 .cartStatus(CartStatus.ACTIVE)
                 .build();
-
-        purchasedProductRepository.save(cart);
+        return cartRepository.save(cart);
     }
 
-    @Override
-    public PurchasedProductResponseDTO getCartFromUser(Long idCustomer) {
-        List<PurchasedProductDTO> products = purchasedProductRepository.findProductsByCustomer(idCustomer, CartStatus.IN_PROGRESS);
-        Double totalSpent = purchasedProductRepository.findTotalSpentOfCartBuy(idCustomer, CartStatus.IN_PROGRESS);
-
-        return PurchasedProductResponseDTO.builder()
-                .products(products)
-                .totalSpent(totalSpent)
-                .build();
-    }
-
-    @Override
-    @Transactional
-    public void cancelPurchased(BuyDeleteDTO buyDeleteDTO) {
-        Cart cart = purchasedProductRepository.findPurchasedProduct(
-                buyDeleteDTO.getIdCustomer(), buyDeleteDTO.getIdProduct()
-        );
-        cart.setCartStatus(CartStatus.CANCELED);
-
-        purchasedProductRepository.save(cart);
-    }
-
-    @Transactional
-    @Override
-    public void updateStock(CartItemRequestDTO cartItemRequestDTO, Long customerId) {
-        Cart purchaseProduct = purchasedProductRepository.findPurchasedProduct(
-                customerId,
-                cartItemRequestDTO.getProductId());
-
-        purchaseProduct.setQuantity(cartItemRequestDTO.getQuantityBuyStock());
-
-        updatePricePurchase(purchaseProduct, cartItemRequestDTO,customerId);
-
-    }
-
-    private void updatePricePurchase(Cart purchase, CartItemRequestDTO cartItemRequestDTO
-    , Long customerId) {
-
-        Double purchasePrice = purchasedProductRepository.findTotalSpentOfIndividualBuy(
-                customerId,
-                cartItemRequestDTO.getProductId(),
-                CartStatus.IN_PROGRESS);
-
-        purchase.setPriceTotal(purchasePrice);
-        purchasedProductRepository.save(purchase);
-    }
-
-    private UserEntity findCustomer(Long idCustomer) {
-        return userRepository.findById(idCustomer)
-                .orElseThrow(() -> new NotFoundException("EL EL ERROR ES EN EL SERVICE " +
-                        " PURCHASE EN EL METODO : 'findCustomer'"));
+    private UserEntity findCustomer(Long id){
+        return userRepository.findById(id).orElseThrow(()
+        -> new NotFoundException("User with the id: "+id+" not founded"));
     }
 
     private Product findProduct(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("product not founded"));
+        return productRepository.findById(productId).orElseThrow(
+                () -> new NotFoundException("product not founded")
+        );
     }
 
     private void validateStock(Integer stock, Integer quantityBuyStock) {
-        if (stock - quantityBuyStock < 0)
-            throw new StockException("quantity to be purchased cannot exceed the available stock");
+        if(stock - quantityBuyStock < 0)
+            throw new StockException("la cantidad a comprar tiene que estar disponible");
     }
-
 }

@@ -27,8 +27,8 @@ public class EmailService implements IEmailService {
             helper.setSubject(sendWelcomeMessageDTO.getSubject());
             helper.setText(getContentEmail(sendWelcomeMessageDTO.getUsername()), true);
             mailSender.send(mimeMessage);
-        }catch (MessagingException e) {
-            e.printStackTrace(); // O usa un logger
+        } catch (MessagingException e) {
+            e.printStackTrace();
             throw new RuntimeException("Error al enviar el correo: " + e.getMessage());
         }
 

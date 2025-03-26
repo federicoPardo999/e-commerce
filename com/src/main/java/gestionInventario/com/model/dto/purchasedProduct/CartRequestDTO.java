@@ -1,15 +1,14 @@
 package gestionInventario.com.model.dto.purchasedProduct;
 
-
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
 @Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BuyDeleteDTO {
-    Long idCustomer;
-    Long idProduct;
+public class CartRequestDTO {
+    Long idUser;
+    Long idCart;
 }

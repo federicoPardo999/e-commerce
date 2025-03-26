@@ -29,13 +29,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class SecurityConfig {
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-    AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
 
-    static String ADMIN = Role.ADMIN.toString();
-    static String CUSTOMER = Role.CUSTOMER.toString();
+    private final static String ADMIN = Role.ADMIN.toString();
+    private final static String CUSTOMER = Role.CUSTOMER.toString();
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -71,13 +70,13 @@ public class SecurityConfig {
     private void configureCustomerEndPoints(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry authRequest) {
         authRequest
                 .requestMatchers(HttpMethod.POST,"/cart/add").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.PATCH,"/cart/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.PATCH,"/cart/delete").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET,"/cart").hasRole(CUSTOMER)
-                .requestMatchers(HttpMethod.POST,"/order/create").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.POST,"/order/create/{cartId}").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET, "/product/get-all").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.POST, "/email/welcome").hasAnyRole(CUSTOMER,ADMIN)
                 .requestMatchers(HttpMethod.PATCH, "/product/update-stock").hasRole(CUSTOMER)
+                .requestMatchers(HttpMethod.PATCH, "/item/update-stock").hasRole(CUSTOMER)
                 .requestMatchers(HttpMethod.GET,"/order/get-orders").hasRole(CUSTOMER);
     }
 
@@ -85,8 +84,6 @@ public class SecurityConfig {
         authRequest
                 .requestMatchers(HttpMethod.POST,"/product/create").hasRole(ADMIN)
                 .requestMatchers(HttpMethod.GET,"/customer/all-customers").hasRole(ADMIN);
-
-
     }
 
     @Bean

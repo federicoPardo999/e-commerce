@@ -17,12 +17,15 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JoinColumn(name = "order_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     OrderEntity order;
 
     @Column(name = "price_cart_item")
     Double orderItemPrice;
 
+    Double priceProduct;
+    String productName;
+    String image;
     Integer quantity;
 }

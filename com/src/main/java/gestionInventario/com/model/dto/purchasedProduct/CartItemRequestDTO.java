@@ -11,4 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class CartItemRequestDTO {
     Integer quantityBuyStock;
     Long productId;
+    Long cartId;
 }
